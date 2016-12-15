@@ -43,8 +43,8 @@ namespace ScharlieAndSnow
         {
             Point size = MapStuff.Instance.map.realSize;
 
-            int x = MathHelper.Clamp((int)p.position.X / partSpace, 0, gridCell.Length - 1);
-            int y = MathHelper.Clamp((int)p.position.Y / partSpace, 0, gridCell.Length - 1);
+            int x = MathHelper.Clamp((int)p.position.X / partSpace, 0, partSpace);
+            int y = MathHelper.Clamp((int)p.position.Y / partSpace, 0, partSpace);
 
             gridCell[x % partSpace + y * partSpace].AddParticle(p);
         }

@@ -20,11 +20,23 @@ namespace ScharlieAndSnow
         public Point realSize;
         Stopwatch stop;
 
+        public RenderTarget2D rendTarget;
+
+        public Color[] snowColor;
+
         public Particle[,] snowTiles;
         public List<Particle> particles = new List<Particle>();
 
-        public Tilemap(Texture2D[] textures, Texture2D bitMap, int _tileSize)
+        public List<Clouds> cloudList = new List<Clouds>();
+
+        Texture2D[] textClouds;
+
+        
+
+        public Tilemap(Texture2D[] textures,Texture2D[] clouds, Texture2D bitMap, int _tileSize)
         {
+            textClouds = clouds;
+            snowColor = new Color[bitMap.Width * _tileSize + bitMap.Height * _tileSize];
             particles.Capacity = 10000;
             stop = new Stopwatch();
             snowTexture = new Texture2D(GraphicStuff.Instance.graphicDevice, bitMap.Width * _tileSize, bitMap.Height * _tileSize);
@@ -37,9 +49,14 @@ namespace ScharlieAndSnow
 
             snowTiles = new Particle[bitMap.Width * tileSize, bitMap.Height * tileSize];
 
-            snowTexture = new Texture2D(textures[0].GraphicsDevice, bitMap.Width * tileSize, bitMap.Height * tileSize);
+            rendTarget = new RenderTarget2D(GraphicStuff.Instance.graphicDevice, realSize.X, realSize.Y);
 
             BuildMap(textures, bitMap);
+
+            cloudList.Add(new Clouds(textClouds[0], new Vector2(100, 50), new Vector2(1f, 0), 1, 0.1f, 30, 8, 3));
+            cloudList.Add(new Clouds(textClouds[0], new Vector2(500, 40), new Vector2(1f, 0), 1, 0.001f, 20, 3, 1));
+            cloudList.Add(new Clouds(textClouds[0], new Vector2(400, 20), new Vector2(4f, 0), 1, 0.001f, 50, 2, 1));
+            cloudList.Add(new Clouds(textClouds[0], new Vector2(700, 80), new Vector2(2f, 0), 1, 0.1f, 180, 13, 4));
         }
 
         private void BuildMap(Texture2D[] textures, Texture2D bitMap)
@@ -48,7 +65,13 @@ namespace ScharlieAndSnow
 
             Color[] clrTexture = new Color[realSize.X * realSize.Y];
 
-            
+            Color[][] tileColor = new Color[textures.Length][];
+            for(int i = 0; i < tileColor.Length;++i)
+            {
+                tileColor[i] = new Color[tileSize * tileSize];
+                textures[i].GetData(tileColor[i]);
+            }
+
 
             bitMap.GetData(colores);
 
@@ -60,22 +83,20 @@ namespace ScharlieAndSnow
                     {
                         // Grass
                         tileMap[x, y] = new Tile(textures[0], new Vector2(x * tileSize, y * tileSize), 0);
+                        snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[0], 0, tileSize * tileSize);
                     }
                     else
                     {
                         // Stein
                         tileMap[x, y] = new Tile(textures[1], new Vector2(x * tileSize, y * tileSize), 1);
+                        snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[1], 0, tileSize * tileSize);
                     }
-                    /*
-                    Color[] tileColor = new Color[tileSize * tileSize];
 
-                    tileMap[x, y].texture.GetData(tileColor);
+                    
 
-                    snowTexture.SetData(0,new Rectangle(x*tileSize,y*tileSize,tileSize,tileSize),tileColor, 0, tileSize * tileSize);
-
-                    if(x % bitMap.Width == 0)
+                    if (x % bitMap.Width == 0)
                         Console.WriteLine((int)(100 * (x % bitMap.Width + y * bitMap.Width) / (float)(bitMap.Width * bitMap.Height)));
-                    */
+
                 }
             }
 
@@ -102,7 +123,7 @@ namespace ScharlieAndSnow
 
                 return tileMap[(int)(currentPosition.X / tileSize), (int)(currentPosition.Y / tileSize)].Walkable();
             }
-            catch(IndexOutOfRangeException)
+            catch (IndexOutOfRangeException)
             {
                 return false;
             }
@@ -115,6 +136,9 @@ namespace ScharlieAndSnow
         /// <returns></returns>
         public bool CheckSnow(Vector2 pos)
         {
+            if (!CheckPosition(pos))
+                return false;
+
             return snowTiles[(int)pos.X, (int)pos.Y] != null;
         }
 
@@ -127,10 +151,45 @@ namespace ScharlieAndSnow
         /// <returns>Gibt Null zurück, wenn an der Position kein Schnee liegt.</returns>
         public Particle GetSnowParticle(Vector2 pos)
         {
+            if (!CheckPosition(pos))
+                return null;
+
             if (CheckSnow(pos))
                 return snowTiles[(int)pos.X, (int)pos.Y];
             else
                 return null;
+        }
+
+        public void CollectSnow(Vector2 position)
+        {
+            if (!CheckPosition(position))
+                return;
+
+            if (!CheckSnow(position))
+                return;
+
+            rendTarget.SetData(0, new Rectangle((int)position.X, (int)position.Y, 2, 2), new[] { new Color(0, 0, 0, 0) }, 0, 1);
+            snowTiles[(int)position.X, (int)position.Y] = null;
+        }
+
+        bool CheckPosition(Vector2 p)
+        {
+            if (float.IsNaN(p.X) || float.IsNaN(p.Y)
+    || p.X >= snowTiles.GetLength(0) || p.Y >= snowTiles.GetLength(1)
+    || p.X < 0 || p.Y < 0)
+                return false;
+
+            return true;
+        }
+
+        bool CheckPosition(Particle p)
+        {
+            if (float.IsNaN(p.position.X) || float.IsNaN(p.position.Y)
+    || p.position.X >= snowTiles.GetLength(0) || p.position.Y >= snowTiles.GetLength(1)
+    || p.position.X < 0 || p.position.Y < 0)
+                return false;
+
+            return true;
         }
 
         /// <summary>
@@ -139,10 +198,21 @@ namespace ScharlieAndSnow
         /// Wenn Masse >5, dann zersplittert der Partikel in weitere Partikel.
         /// </summary>
         /// <param name="p"></param>
-        public void AddSnow( Particle p)
+        public void AddSnow(Particle p)
         {
+            
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            {
+                CollectSnow(p.position + new Vector2(1, 1));
+                return;
+            }
+            
             Vector2 position = p.position;
             p.alive = false;
+
+            if (!CheckPosition(p))
+                return;
+
 
             int numberOfSnow = (int)p.mass;
 
@@ -150,11 +220,14 @@ namespace ScharlieAndSnow
             {
                 snowTiles[(int)position.X, (int)position.Y] = p;
                 particles.Add(p);
+                rendTarget.SetData(0, new Rectangle((int)position.X, (int)position.Y, 2, 2), new[] { p.color, p.color, p.color, p.color }, 0, 1);
             }
-            catch(IndexOutOfRangeException)
+            catch (IndexOutOfRangeException)
             {
-
+                Console.WriteLine(p.position);
             }
+
+
 
 
             p.radius = 1;
@@ -165,19 +238,25 @@ namespace ScharlieAndSnow
             for (int i = 0; i < numberOfSnow; ++i)
             {
                 Vector2 move = new Vector2(0, -1);
-                move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-30,30)));
-                MapStuff.Instance.partCollHandler.AddParticle(position + new Vector2(0,-10), 1, 1, move);
+                move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-30, 30)));
+                MapStuff.Instance.partCollHandler.AddParticle(position + new Vector2(0, -10), 1, 1, move);
             }
         }
 
         public void Update(GameTime gameTime)
         {
-
+            for(int i = 0; i < cloudList.Count; ++i)
+            {
+                if (cloudList[i].alive)
+                    cloudList[i].Update(gameTime);
+                else
+                    cloudList.RemoveAt(i--);
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            
+            /*
             for (int x = 0; x < tileMap.GetLength(0); x++)
             {
                 for (int y = 0; y < tileMap.GetLength(1); y++)
@@ -185,18 +264,23 @@ namespace ScharlieAndSnow
                     tileMap[x, y].Draw(spriteBatch);
                 }
             }
-            
+            */
 
-            //spriteBatch.Draw(snowTexture,Vector2.Zero,Color.White);
+            spriteBatch.Draw(snowTexture, Vector2.Zero, Color.White);
 
-            
+            foreach (Clouds c in cloudList)
+                c.Draw(spriteBatch);
+
+            /*
             foreach (Particle p in particles)
             {
-                if(p != null)
+                if (p != null)
                     p.Draw(spriteBatch);
             }
-            
+            */
+
 
         }
+
     }
 }
