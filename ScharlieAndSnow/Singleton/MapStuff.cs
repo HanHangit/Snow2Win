@@ -12,6 +12,7 @@ namespace ScharlieAndSnow
         public GlobalParticleHandler partCollHandler;
         public Random rnd = new Random(Guid.NewGuid().GetHashCode());
         public Player[] player = new Player[1];
+        public List<PowerUp> powerupOnMap = new List<PowerUp>();
 
         private MapStuff()
         {

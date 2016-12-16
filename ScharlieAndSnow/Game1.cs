@@ -66,11 +66,12 @@ namespace ScharlieAndSnow
                 PlayerManager.Instance.playerArray[i].LoadContent(Content);
 
             //Initialize Map
-            Texture2D[] tiles = { Content.Load<Texture2D>("SkyTile"), Content.Load<Texture2D>("SnowTile") };
-            Texture2D bitMap = Content.Load<Texture2D>("SnowMap");
+            Texture2D[] tiles = { Content.Load<Texture2D>("SkyTile"), Content.Load<Texture2D>("SnowTile"),
+                                    Content.Load<Texture2D>("MapTiles/terrain_slope_down_1"),Content.Load<Texture2D>("MapTiles/terrain_slope_up_1")};
+            Texture2D bitMap = Content.Load<Texture2D>("Map02");
             Texture2D[] clouds = { Content.Load<Texture2D>("Clouds") };
 
-            MapStuff.Instance.map = new Tilemap(tiles,clouds, bitMap, 8);
+            MapStuff.Instance.map = new Tilemap(tiles,clouds, bitMap, 16);
 
 
             //Initialize Camera
