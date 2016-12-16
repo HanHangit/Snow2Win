@@ -34,7 +34,9 @@ namespace ScharlieAndSnow
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
 
-            graphics.ToggleFullScreen();
+            //graphics.ToggleFullScreen();
+
+            IsMouseVisible = true;
 
             graphics.ApplyChanges();
             
