@@ -8,13 +8,15 @@ using System.Threading.Tasks;
 namespace ScharlieAndSnow
 {
 
-    public enum Direction { Up, Left, Right };
-    public enum State { Normal, Dying };
 
     class PlayerManager
     {
         public Player[] playerArray;
-        public static Keys[] validKeys = { Keys.W, Keys.A, Keys.D };
+        public static Keys[][] validKeys =  {
+            new []{ Keys.W, Keys.A, Keys.D }, 
+            new [] { Keys.Up, Keys.Left, Keys.Right }};
+        public static float gravity = 0.1f;
+
         private PlayerManager()
         {
 

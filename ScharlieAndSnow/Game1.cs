@@ -29,8 +29,9 @@ namespace ScharlieAndSnow
         {
             // TODO: Add your initialization logic here
 
-            PlayerManager.Instance.playerArray = new Player[1];
-            PlayerManager.Instance.playerArray[0] = new Player(new Vector2(200, 200));
+            PlayerManager.Instance.playerArray = new Player[2];
+            PlayerManager.Instance.playerArray[0] = new Player(0,new Vector2(200, 200));
+            PlayerManager.Instance.playerArray[1] = new Player(1, new Vector2(300, 300));
 
 
             GraphicStuff.Instance.graphicDevice = GraphicsDevice;

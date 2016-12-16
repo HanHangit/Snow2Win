@@ -13,16 +13,18 @@ namespace ScharlieAndSnow
 
 
     public enum Direction { Up, Left, Right };
-    public enum State { Normal, Dying };
+    public enum State { Normal,Stun, Dying };
 
     class Player
     {
-        float speed;
+        float speed = 2;
+        int _playerId;
         Vector2 _mov;
         Vector2 _pos;
         Texture2D playerTexture;
 
-        public Player(Vector2 _startPosition) {
+        public Player(int _id, Vector2 _startPosition) {
+            _playerId = _id;
             _pos = _startPosition;
         }
         public void LoadContent(ContentManager content)
@@ -36,19 +38,40 @@ namespace ScharlieAndSnow
         public void Update(GameTime gTime)
         {
             Keys[] pressedKeys = (from k in Keyboard.GetState().GetPressedKeys()
-                                  where PlayerManager.validKeys.Contains(k)
+                                  where PlayerManager.validKeys[_playerId].Contains(k)
                                   select k).ToArray();
 
 
+            _mov.Y += PlayerManager.gravity;
+            _mov.X = 0;
+            if (pressedKeys.Length == 1)
+            {
+                for (int i = 0; i < pressedKeys.Length; i++)
+                    Console.WriteLine(pressedKeys[i].ToString());
 
-            if (pressedKeys.Length != 1)
-                return;
+                //_mov = Vector2.Zero;
+
+                //UP
+                if (pressedKeys[0] == PlayerManager.validKeys[_playerId][0])
+                {
+                    //ToDo Jump
+                }
+                //Left
+                if (pressedKeys[0] == PlayerManager.validKeys[_playerId][1])
+                {
+                    _mov.X -= 1;
+                }
+                //Right
+                if (pressedKeys[0] == PlayerManager.validKeys[_playerId][2])
+                {
+                    _mov.X += 1;
+                }
+            }
+ 
             //Debug Shit
-            for (int i = 0; i < pressedKeys.Length; i++)
-                Console.WriteLine(pressedKeys[i].ToString());
 
-            _mov = Vector2.Zero;
-            //if (pressedKeys[0]) == PlayerManager.
+
+            _pos += _mov *  speed;
 
 
             //MapStuff.Instance.map.Walkable(); //position Walkable and CheckSnow
