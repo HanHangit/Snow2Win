@@ -31,9 +31,9 @@ namespace ScharlieAndSnow
 
         Texture2D[] textClouds;
 
-        
 
-        public Tilemap(Texture2D[] textures,Texture2D[] clouds, Texture2D bitMap, int _tileSize)
+
+        public Tilemap(Texture2D[] textures, Texture2D[] clouds, Texture2D bitMap, int _tileSize)
         {
             textClouds = clouds;
             snowColor = new Color[bitMap.Width * _tileSize + bitMap.Height * _tileSize];
@@ -53,10 +53,10 @@ namespace ScharlieAndSnow
 
             BuildMap(textures, bitMap);
 
-            cloudList.Add(new Clouds(textClouds[0], new Vector2(100, 50), new Vector2(1f, 0), 1, 0.1f, 30, 8, 3));
-            cloudList.Add(new Clouds(textClouds[0], new Vector2(500, 40), new Vector2(1f, 0), 1, 0.001f, 20, 3, 1));
-            cloudList.Add(new Clouds(textClouds[0], new Vector2(400, 20), new Vector2(4f, 0), 1, 0.001f, 50, 2, 1));
-            cloudList.Add(new Clouds(textClouds[0], new Vector2(700, 80), new Vector2(2f, 0), 1, 0.1f, 180, 13, 4));
+            cloudList.Add(new Clouds(textClouds[0], new Vector2(100, 50), new Vector2(1f, 0), 1, 0.1f, 300, 10, 3));
+            cloudList.Add(new Clouds(textClouds[0], new Vector2(500, 40), new Vector2(1f, 0), 1, 0.01f, 20, 7, 2));
+            cloudList.Add(new Clouds(textClouds[0], new Vector2(400, 20), new Vector2(4f, 0), 1, 0.2f, 50, 6, 2));
+            cloudList.Add(new Clouds(textClouds[0], new Vector2(700, 80), new Vector2(2f, 0), 1, 0.07f, 180, 13, 4));
         }
 
         private void BuildMap(Texture2D[] textures, Texture2D bitMap)
@@ -66,7 +66,7 @@ namespace ScharlieAndSnow
             Color[] clrTexture = new Color[realSize.X * realSize.Y];
 
             Color[][] tileColor = new Color[textures.Length][];
-            for(int i = 0; i < tileColor.Length;++i)
+            for (int i = 0; i < tileColor.Length; ++i)
             {
                 tileColor[i] = new Color[tileSize * tileSize];
                 textures[i].GetData(tileColor[i]);
@@ -92,7 +92,7 @@ namespace ScharlieAndSnow
                         snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[1], 0, tileSize * tileSize);
                     }
 
-                    
+
 
                     if (x % bitMap.Width == 0)
                         Console.WriteLine((int)(100 * (x % bitMap.Width + y * bitMap.Width) / (float)(bitMap.Width * bitMap.Height)));
@@ -160,6 +160,8 @@ namespace ScharlieAndSnow
                 return null;
         }
 
+
+        //Zum Schnee einsammeln von der MAP!
         public void CollectSnow(Vector2 position)
         {
             if (!CheckPosition(position))
@@ -170,6 +172,25 @@ namespace ScharlieAndSnow
 
             rendTarget.SetData(0, new Rectangle((int)position.X, (int)position.Y, 2, 2), new[] { new Color(0, 0, 0, 0) }, 0, 1);
             snowTiles[(int)position.X, (int)position.Y] = null;
+
+            if (CheckSnow(position + new Vector2(0, -1)))
+            {
+                AddSnow(GetSnowParticle(position + new Vector2(0, -1)),position);
+                CollectSnow(position + new Vector2(0, -1));
+            }
+            else
+            {
+                if (CheckSnow(position + new Vector2(-1, -1)))
+                {
+                    AddSnow(GetSnowParticle(position - new Vector2(1, 1)),position);
+                    CollectSnow(position + new Vector2(-1, -1));
+                }
+                if (CheckSnow(position + new Vector2(1, -1)))
+                {
+                    AddSnow(GetSnowParticle(position + new Vector2(1, -1)),position);
+                    CollectSnow(position + new Vector2(1, -1));
+                }
+            }
         }
 
         bool CheckPosition(Vector2 p)
@@ -200,13 +221,7 @@ namespace ScharlieAndSnow
         /// <param name="p"></param>
         public void AddSnow(Particle p)
         {
-            
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
-            {
-                CollectSnow(p.position + new Vector2(1, 1));
-                return;
-            }
-            
+
             Vector2 position = p.position;
             p.alive = false;
 
@@ -221,6 +236,7 @@ namespace ScharlieAndSnow
                 snowTiles[(int)position.X, (int)position.Y] = p;
                 particles.Add(p);
                 rendTarget.SetData(0, new Rectangle((int)position.X, (int)position.Y, 2, 2), new[] { p.color, p.color, p.color, p.color }, 0, 1);
+                p.mass = 1;
             }
             catch (IndexOutOfRangeException)
             {
@@ -243,9 +259,47 @@ namespace ScharlieAndSnow
             }
         }
 
+        public void AddSnow(Particle p, Vector2 position)
+        {
+            p.alive = false;
+
+            if (!CheckPosition(p))
+                return;
+
+
+            int numberOfSnow = (int)p.mass;
+
+            try
+            {
+                snowTiles[(int)position.X, (int)position.Y] = p;
+                particles.Add(p);
+                rendTarget.SetData(0, new Rectangle((int)position.X, (int)position.Y, 2, 2), new[] { p.color, p.color, p.color, p.color }, 0, 1);
+                p.mass = 1;
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Console.WriteLine(position);
+            }
+
+
+
+
+            p.radius = 1;
+
+            if (numberOfSnow <= 5)
+                return;
+
+            for (int i = 0; i < numberOfSnow; ++i)
+            {
+                Vector2 move = new Vector2(0, -1);
+                move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-30, 30)));
+                MapStuff.Instance.partCollHandler.AddParticle(position + new Vector2(0, -10), 1, 1, move);
+            }
+        }
+
         public void Update(GameTime gameTime)
         {
-            for(int i = 0; i < cloudList.Count; ++i)
+            for (int i = 0; i < cloudList.Count; ++i)
             {
                 if (cloudList[i].alive)
                     cloudList[i].Update(gameTime);
@@ -265,6 +319,11 @@ namespace ScharlieAndSnow
                 }
             }
             */
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            {
+                CollectSnow(Mouse.GetState().Position.ToVector2() + GUIStuff.Instance.camera.position);
+            }
 
             spriteBatch.Draw(snowTexture, Vector2.Zero, Color.White);
 

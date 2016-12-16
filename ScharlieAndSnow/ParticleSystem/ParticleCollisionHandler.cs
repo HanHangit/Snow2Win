@@ -25,9 +25,9 @@ namespace ScharlieAndSnow
 
             partSpace = 32;
 
-            gridCell = new Job_Collision[(MapStuff.Instance.map.realSize.X / partSpace) * (MapStuff.Instance.map.realSize.X / partSpace)];
+            gridCell = new Job_Collision[((MapStuff.Instance.map.realSize.X / partSpace) + 1) *(1 + (MapStuff.Instance.map.realSize.Y / partSpace))];
 
-            for (int i = 0; i < gridCell.GetLength(0); ++i)
+            for (int i = 0; i < gridCell.Length; ++i)
             {
                 gridCell[i] = new Job_Collision();
             }
@@ -43,10 +43,10 @@ namespace ScharlieAndSnow
         {
             Point size = MapStuff.Instance.map.realSize;
 
-            int x = MathHelper.Clamp((int)p.position.X / partSpace, 0, partSpace);
-            int y = MathHelper.Clamp((int)p.position.Y / partSpace, 0, partSpace);
+            int x = MathHelper.Clamp((int)p.position.X / partSpace, 0, size.X / partSpace);
+            int y = MathHelper.Clamp((int)p.position.Y / partSpace, 0, size.X / partSpace);
 
-            gridCell[x % partSpace + y * partSpace].AddParticle(p);
+            gridCell[x + y * (size.X / partSpace)].AddParticle(p);
         }
 
         public void Update(GameTime gTime)
@@ -69,16 +69,19 @@ namespace ScharlieAndSnow
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            Point mapSize = MapStuff.Instance.map.realSize;
 
             //Some Debugging
-            for (int i = 0; i < gridCell.GetLength(0); ++i)
+            for (int i = 0; i < gridCell.Length; ++i)
             {
                 if (gridCell[i].hasParticles)
                 {
-                    spriteBatch.Draw(textParticle, new Vector2(i % partSpace * partSpace, i / partSpace * partSpace), Color.White);
-                    spriteBatch.Draw(textParticle, new Vector2(i % partSpace * partSpace + partSpace, i / partSpace * partSpace), Color.White);
-                    spriteBatch.Draw(textParticle, new Vector2(i % partSpace * partSpace + partSpace, i / partSpace * partSpace + partSpace), Color.White);
-                    spriteBatch.Draw(textParticle, new Vector2(i % partSpace * partSpace, i / partSpace * partSpace + partSpace), Color.White);
+                    Vector2 position = new Vector2(i * partSpace % mapSize.X, ((i * partSpace) / mapSize.X) * partSpace);
+                    //Console.WriteLine(position);
+                    spriteBatch.Draw(textParticle, position + new Vector2(partSpace,partSpace), Color.White);
+                    spriteBatch.Draw(textParticle, position + new Vector2(0, partSpace), Color.White);
+                    spriteBatch.Draw(textParticle, position + new Vector2(partSpace, 0), Color.White);
+                    spriteBatch.Draw(textParticle, position , Color.White);
                 }
 
                 gridCell[i].hasParticles = false;

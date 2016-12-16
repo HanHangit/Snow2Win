@@ -11,6 +11,7 @@ namespace ScharlieAndSnow
         public Tilemap map;
         public GlobalParticleHandler partCollHandler;
         public Random rnd = new Random(Guid.NewGuid().GetHashCode());
+        public Player[] player = new Player[1];
 
         private MapStuff()
         {
