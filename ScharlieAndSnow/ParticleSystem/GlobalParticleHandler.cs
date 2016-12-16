@@ -62,10 +62,10 @@ namespace ScharlieAndSnow
                 timer = maxTimer;
                 Vector2 move = new Vector2(0,1);
 
-                for (int i = 0; i < 1; ++i)
+                for (int i = 0; i < 8; ++i)//mehr partikel
                 {
-                    move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(360)));
-                    particles.Add(new Particle(text, new Vector2(500 + 100 * i, 50), 7, 2, move));
+                    move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(180))); // verringern mehr, vergrößern mehr
+                    particles.Add(new Particle(text, new Vector2(500 + 100 * i, 50), 10, 2, move)); // masse / radius
                 }
 
             }

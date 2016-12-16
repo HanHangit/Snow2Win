@@ -13,10 +13,13 @@ namespace ScharlieAndSnow
         SpriteBatch spriteBatch;
         SpriteFont font;
 
+        Player player;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            player = new Player(new Vector2(200, 200));
         }
 
         /// <summary>
@@ -59,6 +62,8 @@ namespace ScharlieAndSnow
 
             MapStuff.Instance.partCollHandler = new GlobalParticleHandler(Content.Load<Texture2D>("SnowBall"));
 
+            player.LoadContent(Content);
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -89,8 +94,8 @@ namespace ScharlieAndSnow
 
             MapStuff.Instance.partCollHandler.Update(gameTime);
 
-            
 
+            player.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -100,6 +105,7 @@ namespace ScharlieAndSnow
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin(transformMatrix: GUIStuff.Instance.camera.GetViewMatrix(gameTime));
@@ -111,10 +117,11 @@ namespace ScharlieAndSnow
             int fps =(int)( 1 / (float)gameTime.ElapsedGameTime.TotalSeconds);
 
             spriteBatch.DrawString(font,fps.ToString(), GUIStuff.Instance.camera.position, Color.White);
-
+            player.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
+            
         }
     }
 }

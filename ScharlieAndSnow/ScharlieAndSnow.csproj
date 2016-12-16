@@ -45,6 +45,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="ParticleSystem\GlobalParticleHandler.cs" />
+    <Compile Include="Player\Player.cs" />
     <Compile Include="Singleton\GraphicStuff.cs" />
     <Compile Include="Singleton\GUIStuff.cs" />
     <Compile Include="ParticleSystem\Jobs\JobParticleDelete.cs" />
