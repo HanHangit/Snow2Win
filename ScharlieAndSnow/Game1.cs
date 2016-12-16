@@ -36,8 +36,8 @@ namespace ScharlieAndSnow
 
             GraphicStuff.Instance.graphicDevice = GraphicsDevice;
 
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = 1200;
+            graphics.PreferredBackBufferHeight = 1300;
 
             //graphics.ToggleFullScreen();
 

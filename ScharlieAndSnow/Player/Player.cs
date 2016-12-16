@@ -13,7 +13,7 @@ namespace ScharlieAndSnow
 
 
     public enum Direction { Up, Left, Right };
-    public enum State { Normal,Stun, Dying };
+    public enum State { Start, grounded, jumping, Stun, Dying };
 
     class Player
     {
@@ -22,8 +22,11 @@ namespace ScharlieAndSnow
         Vector2 _mov;
         Vector2 _pos;
         Texture2D playerTexture;
+        State _currentState;
+        
 
         public Player(int _id, Vector2 _startPosition) {
+            _currentState = State.Start;
             _playerId = _id;
             _pos = _startPosition;
         }
@@ -42,7 +45,9 @@ namespace ScharlieAndSnow
                                   select k).ToArray();
 
 
+
             _mov.Y += PlayerManager.gravity;
+            //_velocity.Y += PlayerManager.gravity;
             _mov.X = 0;
             if (pressedKeys.Length == 1)
             {
@@ -52,10 +57,12 @@ namespace ScharlieAndSnow
                 //_mov = Vector2.Zero;
 
                 //UP
-                if (pressedKeys[0] == PlayerManager.validKeys[_playerId][0])
+                if ((pressedKeys[0] == PlayerManager.validKeys[_playerId][0] && _currentState == State.grounded) || _currentState == State.Start)
                 {
-                    //ToDo Jump
+                    _mov.Y = -4;
+                    _currentState = State.jumping;
                 }
+
                 //Left
                 if (pressedKeys[0] == PlayerManager.validKeys[_playerId][1])
                 {
@@ -67,11 +74,23 @@ namespace ScharlieAndSnow
                     _mov.X += 1;
                 }
             }
- 
+
             //Debug Shit
 
+            if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X - playerTexture.Bounds.X, _pos.Y + _mov.Y - playerTexture.Bounds.Y)))
+            {
+                _pos.X += _mov.X;
+                _pos.Y += _mov.Y;
+            }
 
-            _pos += _mov *  speed;
+
+            else
+            {
+                _currentState = State.grounded;
+            }
+            Console.WriteLine("X: " + _mov.X + " | Y:" + _mov.Y);
+            
+
 
 
             //MapStuff.Instance.map.Walkable(); //position Walkable and CheckSnow
