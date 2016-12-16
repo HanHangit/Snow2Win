@@ -23,9 +23,10 @@ namespace ScharlieAndSnow
         Vector2 _pos;
         Texture2D playerTexture;
         State _currentState;
-        
 
-        public Player(int _id, Vector2 _startPosition) {
+
+        public Player(int _id, Vector2 _startPosition)
+        {
             _currentState = State.Start;
             _playerId = _id;
             _pos = _startPosition;
@@ -44,10 +45,16 @@ namespace ScharlieAndSnow
                                   where PlayerManager.validKeys[_playerId].Contains(k)
                                   select k).ToArray();
 
-            
 
 
-            _mov.Y += PlayerManager.gravity;
+            while (!MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + playerTexture.Bounds.Size.Y))
+    || !MapStuff.Instance.map.Walkable(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y)))
+                _pos.Y = _pos.Y - 1;
+
+
+            //Nur die Gravitation abziehen, wenn ich nicht auf dem Grund stehe.
+            if (_currentState != State.grounded)
+                _mov.Y += PlayerManager.gravity;
             //_velocity.Y += PlayerManager.gravity;
             _mov.X = 0;
             if (pressedKeys.Length == 1)
@@ -60,6 +67,8 @@ namespace ScharlieAndSnow
                 if ((pressedKeys[0] == PlayerManager.validKeys[_playerId][0] && _currentState == State.grounded) || _currentState == State.Start)
                 {
                     _mov.Y = -4;
+                    //Ist ganz praktisch, den Charakter einen Pixel nach oben zu bewegen, damit er auf jedenfall springen darf.
+                    _pos.Y -= 1;
                     _currentState = State.jumping;
                 }
 
@@ -78,24 +87,22 @@ namespace ScharlieAndSnow
             //Debug Shit
             Console.WriteLine(_mov.Y);
             //Nach Rechts
-            if (_mov.X > 0 && 
-                MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X + playerTexture.Bounds.Size.X - 1, _pos.Y  + playerTexture.Bounds.Size.Y + 2)))
-            {
-                _pos.X += _mov.X;
-
-            }
-            //Nach Links
-            if (_mov.X < 0 && 
-                MapStuff.Instance.map.Walkable(new Vector2(_pos.X - _mov.X - playerTexture.Bounds.Size.X - 1, _pos.Y + playerTexture.Bounds.Size.Y + 2)))
+            //GEÄNDERT!
+            if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y - 17))
+                && MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X, _pos.Y + playerTexture.Bounds.Size.Y - 17)))
             {
                 _pos.X += _mov.X;
 
             }
             //Unten
-            if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X , _pos.Y + _mov.Y + playerTexture.Bounds.Size.Y)))
+            //Überprüfen ob ich sowohl Links unten und Rechts unten fallen darf(von der Textur aus)
+            if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + _mov.Y + playerTexture.Bounds.Size.Y))
+                && MapStuff.Instance.map.Walkable(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + _mov.Y + playerTexture.Bounds.Size.Y)))
             {
 
                 _pos.Y += _mov.Y;
+                //Wenn ich nach unten fallen DARF, dann befinde ich mich ja in der Luft -> state = state.jumping
+                _currentState = State.jumping;
             }
             else
             {
@@ -103,8 +110,6 @@ namespace ScharlieAndSnow
                 _mov.Y = 0;
 
             }
-            //while (!MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + playerTexture.Bounds.Size.Y - 1)))
-            //    _pos.Y = _pos.Y - 1;
 
 
 

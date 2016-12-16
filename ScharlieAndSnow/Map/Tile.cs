@@ -14,14 +14,22 @@ namespace ScharlieAndSnow
         Vector2 position;
         public Texture2D texture;
         int id;
-        public Triangle[] triangles;
+        Triangle triangle;
 
         public Tile(Texture2D _texture, Vector2 _position, int _id)
         {
             texture = _texture;
             position = _position;
             id = _id;
-            triangles = new Triangle[2];
+
+        }
+
+        public Tile(Texture2D _texture, Vector2 _position, int _id, Triangle _triangle)
+        {
+            texture = _texture;
+            position = _position;
+            id = _id;
+            triangle = _triangle;
         }
 
         public void Update(GameTime gameTime)
@@ -29,20 +37,23 @@ namespace ScharlieAndSnow
 
         }
 
+        //Für die Initalisierung der Map vonnöten.
         public bool Walkable()
         {
             return (id == 0);
         }
 
+        public bool Walkable(Vector2 position)
+        {
+            if (triangle == null)
+                return (id == 0);
+            else
+                return triangle.intersect(position);
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, position, Color.White);
-            
-            for(int i = 0; i < triangles.Length; ++i)
-            {
-                if (triangles[i] != null)
-                    triangles[i].Draw(spriteBatch);
-            }                    
         }
     }
 }
