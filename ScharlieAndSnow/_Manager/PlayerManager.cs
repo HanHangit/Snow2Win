@@ -8,9 +8,6 @@ using System.Threading.Tasks;
 namespace ScharlieAndSnow
 {
 
-    public enum Direction { Up, Left, Right };
-    public enum State { Normal, Dying };
-
     class PlayerManager
     {
         public Player[] playerArray;

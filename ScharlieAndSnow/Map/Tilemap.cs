@@ -75,9 +75,9 @@ namespace ScharlieAndSnow
 
             bitMap.GetData(colores);
 
-            for (int y = 0; y < tileMap.GetLength(1); y++)
+            for (int x = 0; x < tileMap.GetLength(0); x++)
             {
-                for (int x = 0; x < tileMap.GetLength(0); x++)
+                for (int y = 0; y < tileMap.GetLength(1); y++)
                 {
                     if (colores[y * tileMap.GetLength(0) + x] == Color.White)
                     {
@@ -91,15 +91,26 @@ namespace ScharlieAndSnow
                         tileMap[x, y] = new Tile(textures[1], new Vector2(x * tileSize, y * tileSize), 1);
                         snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[1], 0, tileSize * tileSize);
                     }
-
-
-
                     if (x % bitMap.Width == 0)
                         Console.WriteLine((int)(100 * (x % bitMap.Width + y * bitMap.Width) / (float)(bitMap.Width * bitMap.Height)));
 
                 }
             }
 
+            for (int x = 1; x < tileMap.GetLength(0) - 1; x++)
+            {
+                for (int y = 1; y < tileMap.GetLength(1) - 1; y++)
+                {
+                    if (!tileMap[x - 1, y].Walkable()
+                        && tileMap[x + 1, y].Walkable() 
+                        && tileMap[x,y].Walkable()
+                        && !tileMap[x + 1, y + 1].Walkable())
+                    {
+                        tileMap[x, y] = new Tile(textures[2], new Vector2(x * tileSize, y * tileSize), 0);
+                        snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[2], 0, tileSize * tileSize);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -175,19 +186,19 @@ namespace ScharlieAndSnow
 
             if (CheckSnow(position + new Vector2(0, -1)))
             {
-                AddSnow(GetSnowParticle(position + new Vector2(0, -1)),position);
+                AddSnow(GetSnowParticle(position + new Vector2(0, -1)), position);
                 CollectSnow(position + new Vector2(0, -1));
             }
             else
             {
                 if (CheckSnow(position + new Vector2(-1, -1)))
                 {
-                    AddSnow(GetSnowParticle(position - new Vector2(1, 1)),position);
+                    AddSnow(GetSnowParticle(position - new Vector2(1, 1)), position);
                     CollectSnow(position + new Vector2(-1, -1));
                 }
                 if (CheckSnow(position + new Vector2(1, -1)))
                 {
-                    AddSnow(GetSnowParticle(position + new Vector2(1, -1)),position);
+                    AddSnow(GetSnowParticle(position + new Vector2(1, -1)), position);
                     CollectSnow(position + new Vector2(1, -1));
                 }
             }
