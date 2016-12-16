@@ -62,6 +62,7 @@
     <Compile Include="Map\Tile.cs" />
     <Compile Include="Map\Tilemap.cs" />
     <Compile Include="MoreGeometry\Triangle.cs" />
+    <Compile Include="_Manager\PlayerManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

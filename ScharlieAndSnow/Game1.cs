@@ -29,14 +29,16 @@ namespace ScharlieAndSnow
         {
             // TODO: Add your initialization logic here
 
+            PlayerManager.Instance.playerArray = new Player[1];
+            PlayerManager.Instance.playerArray[0] = new Player(new Vector2(200, 200));
+
+
             GraphicStuff.Instance.graphicDevice = GraphicsDevice;
 
-            graphics.PreferredBackBufferWidth = 1920;
-            graphics.PreferredBackBufferHeight = 1080;
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
 
             //graphics.ToggleFullScreen();
-
-            IsMouseVisible = true;
 
             graphics.ApplyChanges();
             
@@ -57,6 +59,10 @@ namespace ScharlieAndSnow
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             font = Content.Load<SpriteFont>("FPS");
+
+            //Initialize Player
+            for (int i = 0; i < PlayerManager.Instance.playerArray.Length; i++)
+                PlayerManager.Instance.playerArray[i].LoadContent(Content);
 
             //Initialize Map
             Texture2D[] tiles = { Content.Load<Texture2D>("SkyTile"), Content.Load<Texture2D>("SnowTile") };
@@ -92,6 +98,10 @@ namespace ScharlieAndSnow
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            //Update Player
+            for (int i = 0; i < PlayerManager.Instance.playerArray.Length; i++)
+                PlayerManager.Instance.playerArray[i].Update(gameTime);;
 
             // TODO: Add your update logic here
 
@@ -133,6 +143,10 @@ namespace ScharlieAndSnow
             //spriteBatch.Begin(transformMatrix: GUIStuff.Instance.camera.GetViewMatrix(gameTime));
 
             spriteBatch.Draw(rendTarget2D, Vector2.Zero, Color.White);
+
+            //Draw Player
+            for (int i = 0; i < PlayerManager.Instance.playerArray.Length; i++)
+                PlayerManager.Instance.playerArray[i].Draw(spriteBatch);
 
             spriteBatch.End();
 
