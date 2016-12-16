@@ -44,17 +44,15 @@ namespace ScharlieAndSnow
                                   where PlayerManager.validKeys[_playerId].Contains(k)
                                   select k).ToArray();
 
-            while (!MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y - 10)))
-                _pos.Y = _pos.Y - 1;
-            Console.WriteLine("X: " + _mov.X + " | Y:" + _mov.Y);
+            
+
 
             _mov.Y += PlayerManager.gravity;
             //_velocity.Y += PlayerManager.gravity;
             _mov.X = 0;
             if (pressedKeys.Length == 1)
             {
-                for (int i = 0; i < pressedKeys.Length; i++)
-                    Console.WriteLine(pressedKeys[i].ToString());
+
 
                 //_mov = Vector2.Zero;
 
@@ -78,28 +76,35 @@ namespace ScharlieAndSnow
             }
 
             //Debug Shit
-
-
-            if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X + playerTexture.Bounds.Size.X - 1, _pos.Y  + playerTexture.Bounds.Size.X)))
+            Console.WriteLine(_mov.Y);
+            //Nach Rechts
+            if (_mov.X > 0 && 
+                MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X + playerTexture.Bounds.Size.X - 1, _pos.Y  + playerTexture.Bounds.Size.Y + 2)))
             {
                 _pos.X += _mov.X;
 
             }
-            if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X + playerTexture.Bounds.Size.X - 1, _pos.Y + _mov.Y + playerTexture.Bounds.Size.X)))
+            //Nach Links
+            if (_mov.X < 0 && 
+                MapStuff.Instance.map.Walkable(new Vector2(_pos.X - _mov.X - playerTexture.Bounds.Size.X - 1, _pos.Y + playerTexture.Bounds.Size.Y + 2)))
+            {
+                _pos.X += _mov.X;
+
+            }
+            //Unten
+            if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X , _pos.Y + _mov.Y + playerTexture.Bounds.Size.Y)))
             {
 
                 _pos.Y += _mov.Y;
             }
-            
-
             else
             {
                 _currentState = State.grounded;
                 _mov.Y = 0;
 
             }
-
-            
+            //while (!MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + playerTexture.Bounds.Size.Y - 1)))
+            //    _pos.Y = _pos.Y - 1;
 
 
 
