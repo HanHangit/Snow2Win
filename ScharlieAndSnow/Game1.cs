@@ -67,7 +67,7 @@ namespace ScharlieAndSnow
 
             //Initialize Map
             Texture2D[] tiles = { Content.Load<Texture2D>("SkyTile"), Content.Load<Texture2D>("SnowTile"),
-                                    Content.Load<Texture2D>("MapTiles/terrain_slope_down_1"),Content.Load<Texture2D>("MapTiles/terrain_slope_up_1")};
+                                    Content.Load<Texture2D>("MapTiles/SnowTile_down"),Content.Load<Texture2D>("MapTiles/SnowTile_Up")};
             Texture2D bitMap = Content.Load<Texture2D>("Map02");
             Texture2D[] clouds = { Content.Load<Texture2D>("Clouds") };
 
