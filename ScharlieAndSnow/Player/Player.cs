@@ -48,23 +48,27 @@ namespace ScharlieAndSnow
 
 
             while (!MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + playerTexture.Bounds.Size.Y))
-    || !MapStuff.Instance.map.Walkable(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y)))
+                    || !MapStuff.Instance.map.Walkable(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y)))
                 _pos.Y = _pos.Y - 1;
 
 
             //Nur die Gravitation abziehen, wenn ich nicht auf dem Grund stehe.
             if (_currentState != State.grounded)
                 _mov.Y += PlayerManager.gravity;
-            //_velocity.Y += PlayerManager.gravity;
+
             _mov.X = 0;
-            if (pressedKeys.Length == 1)
+            if (pressedKeys.Length == 1 || pressedKeys.Length == 2)
             {
-
-
-                //_mov = Vector2.Zero;
-
+                if(pressedKeys.Length == 2)
+                    if ((pressedKeys[1] == PlayerManager.validKeys[_playerId][0] && _currentState == State.grounded) || _currentState == State.Start)
+                    {
+                        _mov.Y = -4;
+                        //Ist ganz praktisch, den Charakter einen Pixel nach oben zu bewegen, damit er auf jedenfall springen darf.
+                        _pos.Y -= 1;
+                        _currentState = State.jumping;
+                    }
                 //UP
-                if ((pressedKeys[0] == PlayerManager.validKeys[_playerId][0] && _currentState == State.grounded) || _currentState == State.Start)
+                if ((pressedKeys[0]== PlayerManager.validKeys[_playerId][0] && _currentState == State.grounded) || _currentState == State.Start)
                 {
                     _mov.Y = -4;
                     //Ist ganz praktisch, den Charakter einen Pixel nach oben zu bewegen, damit er auf jedenfall springen darf.
@@ -84,14 +88,11 @@ namespace ScharlieAndSnow
                 }
             }
 
-            //Debug Shit
-            Console.WriteLine(_mov.Y);
             //Nach Rechts
-            //GEÄNDERT!
             if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y - 17))
                 && MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X, _pos.Y + playerTexture.Bounds.Size.Y - 17)))
             {
-                _pos.X += _mov.X;
+                _pos.X += _mov.X * speed;
 
             }
             //Unten
