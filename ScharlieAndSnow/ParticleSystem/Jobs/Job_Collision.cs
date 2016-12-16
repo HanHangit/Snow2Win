@@ -87,7 +87,7 @@ namespace ScharlieAndSnow
                 CalculateBallToMap(particles[i]);
             }
 
-            //hasParticles = false;
+            hasParticles = false;
 
             particles.Clear();
         }
