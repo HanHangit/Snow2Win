@@ -70,6 +70,7 @@ namespace ScharlieAndSnow
             {
                 for (int j = i + 1; j < particles.Count; ++j)
                 {
+                    
                     Particle p1 = particles[i];
                     Particle p2 = particles[j];
 

@@ -16,6 +16,8 @@ namespace ScharlieAndSnow
         public bool alive, noCollision;
         public float radius;
 
+        public Color color;
+
         public Rectangle destRectangle;
 
         public static Texture2D particleText;
@@ -26,6 +28,7 @@ namespace ScharlieAndSnow
 
         public Particle(Texture2D _text, Vector2 _position, float _mass, float _radius, Vector2 move)
         {
+            color = Color.White;
             position = _position + new Vector2(radius,radius);
             if (Particle.particleText == null)
                 particleText = _text;

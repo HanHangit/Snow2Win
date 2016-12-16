@@ -54,7 +54,7 @@ namespace ScharlieAndSnow
         {
 
             //Just for Debugging
-            
+            /*
             timer -= (float)gTime.ElapsedGameTime.TotalSeconds;
 
             if (timer <= 0)
@@ -62,19 +62,19 @@ namespace ScharlieAndSnow
                 timer = maxTimer;
                 Vector2 move = new Vector2(0,1);
 
-                for (int i = 0; i < 8; ++i)//mehr partikel
+                for (int i = 0; i < 10; ++i)
                 {
-                    move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(180))); // verringern mehr, vergrößern mehr
-                    particles.Add(new Particle(text, new Vector2(500 + 100 * i, 50), 10, 2, move)); // masse / radius
+                    move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(360)));
+                    particles.Add(new Particle(text, new Vector2(200 + 100 * i, 50), 7, 2, move));
                 }
 
             }
-            
+            */
 
             //Update Partikels und fügt es dem Collision-Gitter hinzu
             foreach (Particle p in particles)
             {
-                if (p != null &&  !p.alive)
+                if (p == null ||  !p.alive)
                     continue;
                 p.Update(gTime);
 
@@ -97,6 +97,7 @@ namespace ScharlieAndSnow
 
         public void Draw(SpriteBatch spriteBatch)
         {
+
             
             //zeichnet alle Partikel
             foreach (Particle p in particles)
@@ -106,8 +107,7 @@ namespace ScharlieAndSnow
             }
             
             //partHandler.Draw(spriteBatch);
-                  
-                    
+            
         }
     }
 }
