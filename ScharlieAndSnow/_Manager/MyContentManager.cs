@@ -54,7 +54,7 @@ namespace ScharlieAndSnow
         }
         static void LoadFont()
         {
-            fontDictionary.Add(FontName.Arial, Content.Load<SpriteFont>("Font/FPSFont"));
+            fontDictionary.Add(FontName.Arial, Content.Load<SpriteFont>("FPS"));
         }
 
 

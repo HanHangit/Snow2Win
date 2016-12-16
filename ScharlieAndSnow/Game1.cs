@@ -59,7 +59,7 @@ namespace ScharlieAndSnow
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            font = Content.Load<SpriteFont>("FPS");
+            //font = Content.Load<SpriteFont>("FPS");
 
             //Initialize Player
             for (int i = 0; i < PlayerManager.Instance.playerArray.Length; i++)
@@ -136,7 +136,7 @@ namespace ScharlieAndSnow
 
             int fps =(int)( 1 / (float)gameTime.ElapsedGameTime.TotalSeconds);
 
-            spriteBatch.DrawString(font,fps.ToString(), GUIStuff.Instance.camera.position, Color.White);
+            spriteBatch.DrawString(MyContentManager.GetFont(MyContentManager.FontName.Arial),fps.ToString(), GUIStuff.Instance.camera.position, Color.White);
 
             //spriteBatch.End();
             
