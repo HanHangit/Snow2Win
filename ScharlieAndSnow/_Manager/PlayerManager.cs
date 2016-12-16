@@ -13,8 +13,9 @@ namespace ScharlieAndSnow
     {
         public Player[] playerArray;
         public static Keys[][] validKeys =  {
-            new []{ Keys.W, Keys.A, Keys.D }, 
-            new [] { Keys.Up, Keys.Left, Keys.Right }};
+            //Up, left, right, collect, throw
+            new []{ Keys.W, Keys.A, Keys.D, Keys.Q, Keys.E }, 
+            new [] { Keys.NumPad5, Keys.NumPad1, Keys.NumPad3, Keys.NumPad0, Keys.NumPad2 }};
         public static float gravity = 0.1f;
 
         private PlayerManager()

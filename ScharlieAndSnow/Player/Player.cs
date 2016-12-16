@@ -41,16 +41,23 @@ namespace ScharlieAndSnow
         }
         public void Update(GameTime gTime)
         {
+
+            ControllerCheckInput();
+
+        }
+
+        /*  MapStuff.Instance.map.Walkable(); //position Walkable and CheckSnow
+            MapStuff.Instance.map.CheckSnow(); Checkt ob dort Schnell liegt
+            MapStuff.Instance.map.CollectSnow(); Sammelt Schnell auf (Funktion entfernt schnee und lässt nachrutschen)
+        */
+
+
+
+        void ControllerCheckInput()
+        {
             Keys[] pressedKeys = (from k in Keyboard.GetState().GetPressedKeys()
                                   where PlayerManager.validKeys[_playerId].Contains(k)
                                   select k).ToArray();
-
-
-
-            while (!MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + playerTexture.Bounds.Size.Y))
-                    || !MapStuff.Instance.map.Walkable(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y)))
-                _pos.Y = _pos.Y - 1;
-
 
             //Nur die Gravitation abziehen, wenn ich nicht auf dem Grund stehe.
             if (_currentState != State.grounded)
@@ -59,7 +66,8 @@ namespace ScharlieAndSnow
             _mov.X = 0;
             if (pressedKeys.Length == 1 || pressedKeys.Length == 2)
             {
-                if(pressedKeys.Length == 2)
+                // --- 2 Inputs! ---
+                if (pressedKeys.Length == 2)
                     if ((pressedKeys[1] == PlayerManager.validKeys[_playerId][0] && _currentState == State.grounded) || _currentState == State.Start)
                     {
                         _mov.Y = -4;
@@ -67,8 +75,11 @@ namespace ScharlieAndSnow
                         _pos.Y -= 1;
                         _currentState = State.jumping;
                     }
-                //UP
-                if ((pressedKeys[0]== PlayerManager.validKeys[_playerId][0] && _currentState == State.grounded) || _currentState == State.Start)
+
+                // --- 1 Input! ---
+
+                //Move UP
+                if ((pressedKeys[0] == PlayerManager.validKeys[_playerId][0] && _currentState == State.grounded) || _currentState == State.Start)
                 {
                     _mov.Y = -4;
                     //Ist ganz praktisch, den Charakter einen Pixel nach oben zu bewegen, damit er auf jedenfall springen darf.
@@ -76,27 +87,30 @@ namespace ScharlieAndSnow
                     _currentState = State.jumping;
                 }
 
-                //Left
+                //Move Left
                 if (pressedKeys[0] == PlayerManager.validKeys[_playerId][1])
-                {
                     _mov.X -= 1;
-                }
-                //Right
-                if (pressedKeys[0] == PlayerManager.validKeys[_playerId][2])
-                {
-                    _mov.X += 1;
-                }
-            }
 
-            //Nach Rechts
+                //Move Right
+                if (pressedKeys[0] == PlayerManager.validKeys[_playerId][2])
+                    _mov.X += 1;
+                
+
+            }
+            CheckCollision(_mov); //Check ob die Bewegung funktioniert
+        }
+
+        void CheckCollision(Vector2 _mov)
+        {
+            //Collision der linken obere Ecke sowie der rechten obere Ecke
+            //Collision Check X-Achse
             if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y - 17))
-                && MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X, _pos.Y + playerTexture.Bounds.Size.Y - 17)))
+            && MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X, _pos.Y + playerTexture.Bounds.Size.Y - 17)))
             {
                 _pos.X += _mov.X * speed;
 
             }
-            //Unten
-            //Überprüfen ob ich sowohl Links unten und Rechts unten fallen darf(von der Textur aus)
+            //Collision Check Y-Achse
             if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + _mov.Y + playerTexture.Bounds.Size.Y))
                 && MapStuff.Instance.map.Walkable(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + _mov.Y + playerTexture.Bounds.Size.Y)))
             {
@@ -109,16 +123,10 @@ namespace ScharlieAndSnow
             {
                 _currentState = State.grounded;
                 _mov.Y = 0;
-
             }
-
-
-
-            //MapStuff.Instance.map.Walkable(); //position Walkable and CheckSnow
-            //MapStuff.Instance.map.CheckSnow(); Checkt ob dort Schnell liegt
-            //MapStuff.Instance.map.CollectSnow(); Sammelt Schnell auf (Funktion entfernt schnee und lässt nachrutschen)
-
-
+            while (!MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + playerTexture.Bounds.Size.Y))
+            || !MapStuff.Instance.map.Walkable(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y)))
+                _pos.Y = _pos.Y - 1;
         }
     }
 }

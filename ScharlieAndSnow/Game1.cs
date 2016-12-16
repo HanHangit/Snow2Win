@@ -16,6 +16,7 @@ namespace ScharlieAndSnow
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            MyContentManager myContentManager = new MyContentManager(Content);
             Content.RootDirectory = "Content";
         }
 
