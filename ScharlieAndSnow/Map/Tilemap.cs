@@ -160,6 +160,8 @@ namespace ScharlieAndSnow
                 return null;
         }
 
+
+        //Zum Schnee einsammeln von der MAP!
         public void CollectSnow(Vector2 position)
         {
             if (!CheckPosition(position))

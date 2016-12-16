@@ -23,7 +23,7 @@ namespace ScharlieAndSnow
         {
             stop = new System.Diagnostics.Stopwatch();
 
-            partSpace = 8;
+            partSpace = 32;
 
             gridCell = new Job_Collision[((MapStuff.Instance.map.realSize.X / partSpace) + 1) *(1 + (MapStuff.Instance.map.realSize.Y / partSpace))];
 

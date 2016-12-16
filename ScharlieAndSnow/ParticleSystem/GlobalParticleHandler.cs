@@ -50,6 +50,8 @@ namespace ScharlieAndSnow
             particles.Add(new Particle(text, _position + move, _mass, _radius, move));
         }
 
+         
+
         public void Update(GameTime gTime)
         {
 
