@@ -58,7 +58,7 @@ namespace ScharlieAndSnow
                     p.position.X += 1;
             }
 
-            p.position.Y -= 1;
+            p.position.Y -= 1f;
             MapStuff.Instance.map.AddSnow(p);
             
 

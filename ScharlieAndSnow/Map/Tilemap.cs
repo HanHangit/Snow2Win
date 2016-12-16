@@ -70,7 +70,6 @@ namespace ScharlieAndSnow
             //Wichtig!!
             int triangleOffset = -1;
 
-            Triangle skyTriangle = new Triangle(new[] { new Vector2(triangleOffset,0), new Vector2(tileSize - triangleOffset, tileSize - triangleOffset), new Vector2(triangleOffset, tileSize - triangleOffset) });
             for (int i = 0; i < tileColor.Length; ++i)
             {
                 tileColor[i] = new Color[tileSize * tileSize];
@@ -79,7 +78,14 @@ namespace ScharlieAndSnow
                 //Für die Dreiecke der TileMap
                 if(i == 2 || i == 3)
                 {
-                    for(int j = 0; j < tileColor[i].Length; ++j)
+                    Triangle skyTriangle;
+                    if (i == 2)
+                        skyTriangle = new Triangle(new[] { new Vector2(triangleOffset, 0), new Vector2(tileSize - triangleOffset, tileSize - triangleOffset), new Vector2(triangleOffset, tileSize - triangleOffset) });
+                    else
+                        skyTriangle = new Triangle(new[] { new Vector2(tileSize, 0),
+                                            new Vector2(tileSize, tileSize),
+                                            new Vector2(0, tileSize) });
+                    for (int j = 0; j < tileColor[i].Length; ++j)
                     {
                         if (!skyTriangle.intersect(new Vector2(j % tileSize, j / tileSize)))
                             tileColor[i][j] = tileColor[0][0];
@@ -119,8 +125,8 @@ namespace ScharlieAndSnow
                     Vector2 position = new Vector2(x * tileSize, y * tileSize);
                     if (!tileMap[x - 1, y].Walkable()
                         && tileMap[x + 1, y].Walkable() 
-                        && tileMap[x,y].Walkable()
-                        && !tileMap[x + 1, y + 1].Walkable())
+                        && tileMap[x,y].Walkable()                        
+                        && !tileMap[x,y+1].Walkable())
                     {
                         Triangle triangle = new Triangle(new[] {
                             new Vector2(triangleOffset + x * tileSize, y * tileSize),
@@ -131,6 +137,22 @@ namespace ScharlieAndSnow
                         //Console.WriteLine(triangle.ToString());
                         tileMap[x, y] = new Tile(textures[2], new Vector2(x * tileSize, y * tileSize), 0,triangle);
                         snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[2], 0, tileSize * tileSize);
+                    }
+
+                    else if (tileMap[x - 1, y].Walkable()
+    && !tileMap[x + 1, y].Walkable()
+    && tileMap[x, y].Walkable()
+    && !tileMap[x, y + 1].Walkable())
+                    {
+                        Triangle triangle = new Triangle(new[] {
+                            new Vector2(x * tileSize + tileSize, y * tileSize),
+                            new Vector2(tileSize + x * tileSize,y * tileSize + tileSize ),
+                            new Vector2(x * tileSize,y * tileSize + tileSize)
+                        });
+                        //Console.WriteLine("Position: " + new Vector2(x * tileSize, y * tileSize));
+                        //Console.WriteLine(triangle.ToString());
+                        tileMap[x, y] = new Tile(textures[3], new Vector2(x * tileSize, y * tileSize), 0, triangle);
+                        snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[3], 0, tileSize * tileSize);
                     }
                 }
             }

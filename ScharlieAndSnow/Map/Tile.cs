@@ -48,7 +48,10 @@ namespace ScharlieAndSnow
             if (triangle == null)
                 return (id == 0);
             else
-                return triangle.intersect(position);
+            {
+                //Console.WriteLine("Triangle Intersect " + position);
+                return !triangle.intersect(position);
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
