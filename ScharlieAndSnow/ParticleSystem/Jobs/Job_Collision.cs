@@ -54,7 +54,7 @@ namespace ScharlieAndSnow
 
                 if (MapStuff.Instance.map.Walkable(p.position - new Vector2(1, 0)))
                     p.position.X -= 1;
-                else if (MapStuff.Instance.map.Walkable(p.position - new Vector2(-1, 0)))
+                else if (MapStuff.Instance.map.Walkable(p.position + new Vector2(1, 0)))
                     p.position.X += 1;
             }
 
