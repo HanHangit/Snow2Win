@@ -18,6 +18,7 @@ namespace ScharlieAndSnow
     class Player
     {
         float speed = 2;
+        float _points = 0;
         int _playerId;
         Vector2 _mov;
         Vector2 _pos;
@@ -94,6 +95,17 @@ namespace ScharlieAndSnow
                 //Move Right
                 if (pressedKeys[0] == PlayerManager.validKeys[_playerId][2])
                     _mov.X += 1;
+                //Collect Snow
+                if(pressedKeys[0] == PlayerManager.validKeys[_playerId][3])
+                {
+                    if (MapStuff.Instance.map.CheckSnow(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 8)))
+                    {
+                        //new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 5)
+                        MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 8));
+                        _points++;
+                        Console.WriteLine(_points);
+                    }
+                }
                 
 
             }
