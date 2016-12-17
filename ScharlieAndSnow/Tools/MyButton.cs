@@ -17,6 +17,7 @@ namespace ScharlieAndSnow
         Texture2D texture;
         SpriteFont fnd;
         Color color;
+        bool isTouching;
 
 
         public int ButtonX
@@ -44,6 +45,7 @@ namespace ScharlieAndSnow
             buttonY = (int)_vec.Y;
             fnd = _font;
             color = _color;
+            isTouching = false;
 
             texture = new Texture2D(GraphicStuff.Instance.graphicDevice, width, height);
             Color[] data1 = new Color[texture.Width * texture.Height];
@@ -58,6 +60,7 @@ namespace ScharlieAndSnow
             this.texture = texture;
             this.buttonX = (int)_vec.X;
             this.buttonY = (int)_vec.Y;
+            isTouching = false;
         }
 
         /**
@@ -71,8 +74,10 @@ namespace ScharlieAndSnow
                     mouseState.Y < buttonY + texture.Height &&
                     mouseState.Y > buttonY)
             {
+                isTouching = true;
                 return true;
             }
+            isTouching = false;
             return false;
         }
 
@@ -98,12 +103,15 @@ namespace ScharlieAndSnow
         //ToDO Text margin
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, new Rectangle((int)ButtonX, (int)ButtonY, texture.Width, texture.Height), Color.White);
+            if(!isTouching)
+                spriteBatch.Draw(texture, new Rectangle((int)ButtonX, (int)ButtonY, texture.Width, texture.Height), Color.White);
+            else
+                spriteBatch.Draw(texture, new Rectangle((int)ButtonX, (int)ButtonY, texture.Width, texture.Height), Color.Yellow);
 
 
             //spriteBatch.Draw(texture, new Rectangle(Constant.Calculate(20,20, width, height).ToPoint(), new Point(width,height)), Color.White);
             //spriteBatch.DrawString(fnd, name, new Vector2((int)ButtonX, (int)ButtonY), Color.White);
-            
+
             spriteBatch.DrawString(fnd, name, new Vector2(Constant.Calculate(4f, 2f, ButtonX, ButtonY).X + buttonX, Constant.Calculate(4f, 0.5f, ButtonX, ButtonY).Y + ButtonY), Color.White);
         }
     }
