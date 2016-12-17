@@ -56,6 +56,7 @@ namespace ScharlieAndSnow
             playButton.Draw(spriteBatch);
             exitButton2.Draw(spriteBatch);
             exitButton.Draw(spriteBatch);
+
             if (troll)
                 shitClick.Draw(spriteBatch);
         }
@@ -87,6 +88,12 @@ namespace ScharlieAndSnow
                 return EGameState.PlayState;
             if (state.IsKeyDown(Keys.Enter))
                 return EGameState.PlayState;
+            if (exitButton2.isClick())
+                Console.WriteLine("EXIT");
+            if (playButton.isClick())
+                Console.WriteLine("KLICK");
+
+            //DEBUG
             if (state.IsKeyDown(Keys.F1))
                 troll = true;
             if (state.IsKeyDown(Keys.F2))

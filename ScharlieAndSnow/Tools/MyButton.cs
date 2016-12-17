@@ -18,6 +18,7 @@ namespace ScharlieAndSnow
         SpriteFont fnd;
         Color color;
         bool isTouching;
+        bool isClicking;
 
 
         public int ButtonX
@@ -45,6 +46,7 @@ namespace ScharlieAndSnow
             buttonY = (int)_vec.Y;
             fnd = _font;
             color = _color;
+            isClicking = false;
             isTouching = false;
 
             texture = new Texture2D(GraphicStuff.Instance.graphicDevice, width, height);
@@ -61,6 +63,7 @@ namespace ScharlieAndSnow
             this.buttonX = (int)_vec.X;
             this.buttonY = (int)_vec.Y;
             isTouching = false;
+            isClicking = false;
         }
 
         /**
@@ -94,19 +97,29 @@ namespace ScharlieAndSnow
 
             if (EnterButton() && isInputPressed)
             {
+                isClicking = true;
                 return true;
 
             }
             else
+            {
+                isClicking = false;
                 return false;
+            }
+
         }
         //ToDO Text margin
         public void Draw(SpriteBatch spriteBatch)
         {
-            if(!isTouching)
-                spriteBatch.Draw(texture, new Rectangle((int)ButtonX, (int)ButtonY, texture.Width, texture.Height), Color.White);
+            if (!isTouching) 
+            spriteBatch.Draw(texture, new Rectangle((int)ButtonX, (int)ButtonY, texture.Width, texture.Height), Color.White);
             else
+            {
                 spriteBatch.Draw(texture, new Rectangle((int)ButtonX, (int)ButtonY, texture.Width, texture.Height), Color.Yellow);
+                if (isClicking)
+                    spriteBatch.Draw(texture, new Rectangle((int)ButtonX, (int)ButtonY, texture.Width, texture.Height), Color.Red);
+            }
+               
 
 
             //spriteBatch.Draw(texture, new Rectangle(Constant.Calculate(20,20, width, height).ToPoint(), new Point(width,height)), Color.White);
