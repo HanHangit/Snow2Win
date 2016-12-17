@@ -9,8 +9,8 @@ namespace ScharlieAndSnow
 {
     public class Constant
     {
-        public static int x = 800;
-        public static int y = 600;
+        public static int x = 1270;
+        public static int y = 720;
         /// <summary>
         /// Gibt die prozentuale Position von dem Windows zurück
         /// </summary>

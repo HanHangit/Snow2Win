@@ -21,29 +21,16 @@ namespace ScharlieAndSnow
         bool isClicking;
 
 
-        public int ButtonX
-        {
-            get
-            {
-                return buttonX;
-            }
-        }
-
-        public int ButtonY
-        {
-            get
-            {
-                return buttonY;
-            }
-        }
+        public int ButtonX{ get { return buttonX; } }
+        public int ButtonY { get { return buttonY; } }
 
         public MyButton(string _name, int _width, int _height, Vector2 _vec, SpriteFont _font, Color _color)
         {
             name = _name;
             width = _width;
             height = _height;
-            buttonX = (int)_vec.X;
-            buttonY = (int)_vec.Y;
+            buttonX = (int)Constant.PercentFromWindow(_vec.X, 0);
+            buttonY = (int)Constant.PercentFromWindow(_vec.Y, 1);
             fnd = _font;
             color = _color;
             isClicking = false;
@@ -60,15 +47,12 @@ namespace ScharlieAndSnow
             fnd = font;
             this.name = name;
             this.texture = texture;
-            this.buttonX = (int)_vec.X;
-            this.buttonY = (int)_vec.Y;
+            buttonX = (int)Constant.PercentFromWindow(_vec.X, 0);
+            buttonY = (int)Constant.PercentFromWindow(_vec.Y, 1);
             isTouching = false;
             isClicking = false;
         }
 
-        /**
-         * @return true: If a player enters the button with mouse
-         */
         public bool EnterButton()
         {
             var mouseState = Mouse.GetState();
@@ -111,21 +95,26 @@ namespace ScharlieAndSnow
         //ToDO Text margin
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (!isTouching) 
-            spriteBatch.Draw(texture, new Rectangle((int)ButtonX, (int)ButtonY, texture.Width, texture.Height), Color.White);
-            else
-            {
-                spriteBatch.Draw(texture, new Rectangle((int)ButtonX, (int)ButtonY, texture.Width, texture.Height), Color.Yellow);
-                if (isClicking)
-                    spriteBatch.Draw(texture, new Rectangle((int)ButtonX, (int)ButtonY, texture.Width, texture.Height), Color.Red);
+            Color color = Color.White;
+            if (isTouching) {
+                color = Color.Yellow;
+                if (isClicking) color = Color.Red;
             }
-               
 
+            spriteBatch.Draw(texture, new Rectangle(ButtonX, ButtonY, texture.Width, texture.Height), color);
+            /*ToDo
+             * ---------------
+             * |    ----    |
+             * |    |   |   |
+             * |    |   |   |
+             * |    -----   |
+             * --------------
+             * Im zweiten Rechteck den Padding bereich Prozentual noch definieren
+             * http://www.avajava.com/tutorials/cascading-style-sheets/how-are-margins-borders-padding-and-content-related/how-are-margins-borders-padding-and-content-related-01.gif
+             * z.B Oben 5%, links 5% etc
+             */
 
-            //spriteBatch.Draw(texture, new Rectangle(Constant.Calculate(20,20, width, height).ToPoint(), new Point(width,height)), Color.White);
-            //spriteBatch.DrawString(fnd, name, new Vector2((int)ButtonX, (int)ButtonY), Color.White);
-
-            spriteBatch.DrawString(fnd, name, new Vector2(Constant.Calculate(4f, 2f, ButtonX, ButtonY).X + buttonX, Constant.Calculate(4f, 0.5f, ButtonX, ButtonY).Y + ButtonY), Color.White);
+            spriteBatch.DrawString(fnd, name, new Vector2(ButtonX + (int)Constant.PercentFromValue(2, ButtonX), ButtonY + (int)Constant.PercentFromValue(1, ButtonY)), Color.White);
         }
     }
 }
