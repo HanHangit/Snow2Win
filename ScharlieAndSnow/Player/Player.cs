@@ -40,7 +40,7 @@ namespace ScharlieAndSnow
             temperature = 100;
             maxTemperature = 100;
             _pos = _startPosition;
-            
+
         }
 
         public void Draw(SpriteBatch spriteBatch)

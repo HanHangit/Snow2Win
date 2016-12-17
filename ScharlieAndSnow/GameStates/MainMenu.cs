@@ -25,20 +25,20 @@ namespace ScharlieAndSnow
         MyButton playButton;
         MyButton exitButton;
         MyButton shitClick;
-        MyButton newButton;
+        MyButton continueButton;
         MyButton exitButton2;
         Texture2D background;
         String headline = "ScharlieAndSnow";
         bool troll;
         public MainMenu()
         {
-            background = MyContentManager.GetTexture(MyContentManager.TextureName.BackGround);
+            background = MyContentManager.GetTexture(MyContentManager.TextureName.BackGround_1270x720);
 
             troll = false;
             Console.WriteLine("MainMenu");
-            newButton = new MyButton("", MyContentManager.GetTexture(MyContentManager.TextureName.GoBUtton), new Vector2(700,500), MyContentManager.GetFont(MyContentManager.FontName.Arial));
-            exitButton2 = new MyButton("", MyContentManager.GetTexture(MyContentManager.TextureName.ExitButton), new Vector2(40, 500), MyContentManager.GetFont(MyContentManager.FontName.Arial));
-            playButton = new MyButton("PlayWithMe", 200, 40, Constant.Calculate(40, 60), MyContentManager.GetFont(MyContentManager.FontName.Arial), Color.Red);
+            continueButton = new MyButton("", MyContentManager.GetTexture(MyContentManager.TextureName.GoBUtton), new Vector2(95,85), MyContentManager.GetFont(MyContentManager.FontName.Arial));
+            exitButton2 = new MyButton("", MyContentManager.GetTexture(MyContentManager.TextureName.ExitButton), new Vector2(5, 85), MyContentManager.GetFont(MyContentManager.FontName.Arial));
+            playButton = new MyButton("PlayWithMe", 200, 40, new Vector2(40, 60), MyContentManager.GetFont(MyContentManager.FontName.Arial), Color.Red);
             exitButton = new MyButton("Exit Game", 200, 40, Constant.Calculate(40, 68), MyContentManager.GetFont(MyContentManager.FontName.Arial), Color.Red);
             shitClick = new MyButton("Keine Tasten drücken, sondern die Maus bedienen! Faule Studenten", 600, 40, Constant.Calculate(1, 80), MyContentManager.GetFont(MyContentManager.FontName.Arial), Color.Red);
 
@@ -50,12 +50,12 @@ namespace ScharlieAndSnow
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(background, new Vector2(0, 0));
-            spriteBatch.DrawString(MyContentManager.GetFont(MyContentManager.FontName.Arial), headline, Constant.Calculate(25, 20), Color.Red, 0, new Vector2(0,0),2, SpriteEffects.None, 0);
+            spriteBatch.DrawString(MyContentManager.GetFont(MyContentManager.FontName.Arial), headline, Constant.Calculate(25, 20), Color.Red, 0, new Vector2(0,0),3, SpriteEffects.None, 0);
 
-            newButton.Draw(spriteBatch);
-            playButton.Draw(spriteBatch);
+            continueButton.Draw(spriteBatch);
+            //playButton.Draw(spriteBatch);
             exitButton2.Draw(spriteBatch);
-            exitButton.Draw(spriteBatch);
+            //exitButton.Draw(spriteBatch);
 
             if (troll)
                 shitClick.Draw(spriteBatch);
@@ -78,20 +78,19 @@ namespace ScharlieAndSnow
 
         public EGameState Update(GameTime gTime)
         {
-            newButton.Update(gTime);
+            continueButton.Update(gTime);
             playButton.Update(gTime);
             exitButton.Update(gTime);
             shitClick.Update(gTime);
             KeyboardState state = Keyboard.GetState();
 
-            if (newButton.isClick())
+            if (continueButton.isClick())
                 return EGameState.PlayState;
             if (state.IsKeyDown(Keys.Enter))
                 return EGameState.PlayState;
             if (exitButton2.isClick())
                 Console.WriteLine("EXIT");
-            if (playButton.isClick())
-                Console.WriteLine("KLICK");
+
 
             //DEBUG
             if (state.IsKeyDown(Keys.F1))

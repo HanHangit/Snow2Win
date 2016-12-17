@@ -53,6 +53,7 @@ namespace ScharlieAndSnow
             textureDictionary.Add(TextureName.GoBUtton, Content.Load <Texture2D>("PlayButton"));
             textureDictionary.Add(TextureName.BackGround, Content.Load<Texture2D>("BackGround"));
             textureDictionary.Add(TextureName.ExitButton, Content.Load<Texture2D>("ExitButton"));
+            textureDictionary.Add(TextureName.BackGround_1270x720, Content.Load<Texture2D>("BackGround_1270x720"));
 
         }
         static void LoadFont()
@@ -73,7 +74,8 @@ namespace ScharlieAndSnow
             Player1,
             GoBUtton,
             ExitButton,
-            BackGround
+            BackGround,
+            BackGround_1270x720
         }
         public enum FontName
         {
