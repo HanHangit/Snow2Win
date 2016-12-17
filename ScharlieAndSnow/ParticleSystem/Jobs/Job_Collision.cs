@@ -25,7 +25,7 @@ namespace ScharlieAndSnow
             hasParticles = true;
         }
 
-        public void CalculateBallToBallCollision(Particle p1, Particle p2)
+        void CalculateBallToBallCollision(Particle p1, Particle p2)
         {
             Vector2 collision = p1.position - p2.position;
             float distance = collision.Length();
@@ -42,7 +42,7 @@ namespace ScharlieAndSnow
             p2.position += p2.force;
         }
 
-        public void CalculateBallToMap(Particle p)
+        void CalculateBallToMap(Particle p)
         {
             if (MapStuff.Instance.map.Walkable(p.position + p.force))
                 return;
@@ -54,7 +54,7 @@ namespace ScharlieAndSnow
 
                 if (MapStuff.Instance.map.Walkable(p.position - new Vector2(1, 0)))
                     p.position.X -= 1;
-                else if (MapStuff.Instance.map.Walkable(p.position - new Vector2(-1, 0)))
+                else if (MapStuff.Instance.map.Walkable(p.position + new Vector2(1, 0)))
                     p.position.X += 1;
             }
 
@@ -62,6 +62,28 @@ namespace ScharlieAndSnow
             MapStuff.Instance.map.AddSnow(p);
             
 
+        }
+
+        void CalculateBallToPlayer(Particle p)
+        {
+            Player[] players = PlayerManager.Instance.playerArray;
+
+            foreach(Player ply in players)
+            {
+                //Bounds vom Player added
+                if((ply._pos + new Vector2(8,16) - p.position).Length() < p.radius + 8)
+                {
+                    p.alive = false;
+                    int numberOfSnow = (int)p.mass / 5;
+                    for (int i = 0; i < numberOfSnow; ++i)
+                    {
+                        Vector2 move = new Vector2(0, -1);
+                        move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-30, 30)));
+                        MapStuff.Instance.partCollHandler.AddParticle(p.position + new Vector2(0, -20), 1, 1, move);
+                    }
+                    return;
+                }
+            }
         }
 
         public void CalculateCollision()
@@ -85,6 +107,8 @@ namespace ScharlieAndSnow
 
                 }
                 CalculateBallToMap(particles[i]);
+                CalculateBallToPlayer(particles[i]);
+                
             }
 
             hasParticles = false;
