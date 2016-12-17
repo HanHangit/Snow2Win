@@ -43,7 +43,7 @@ namespace ScharlieAndSnow
         static void LoadTexture()
         {
             textureDictionary.Add(TextureName.SkyTile, Content.Load<Texture2D>("SkyTile"));
-            textureDictionary.Add(TextureName.SnowTile, Content.Load<Texture2D>("SkyTile"));
+            textureDictionary.Add(TextureName.SnowTile, Content.Load<Texture2D>("SnowTile"));
             textureDictionary.Add(TextureName.SnowTile_down, Content.Load<Texture2D>("MapTiles/SnowTile_down"));
             textureDictionary.Add(TextureName.SnowTile_up, Content.Load<Texture2D>("MapTiles/SnowTile_Up"));
             textureDictionary.Add(TextureName.Map02, Content.Load<Texture2D>("Map02"));

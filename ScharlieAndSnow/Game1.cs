@@ -62,18 +62,23 @@ namespace ScharlieAndSnow
 
 
             //Initialize Map
-            Texture2D[] tiles = { Content.Load<Texture2D>("SkyTile"), Content.Load<Texture2D>("SnowTile"),
-                                    Content.Load<Texture2D>("MapTiles/SnowTile_down"),Content.Load<Texture2D>("MapTiles/SnowTile_Up")};
-            Texture2D bitMap = Content.Load<Texture2D>("Map02");
-            Texture2D[] clouds = { Content.Load<Texture2D>("Clouds") };
+            Texture2D[] tiles = { MyContentManager.GetTexture(MyContentManager.TextureName.SkyTile), MyContentManager.GetTexture(MyContentManager.TextureName.SnowTile),
+                                    MyContentManager.GetTexture(MyContentManager.TextureName.SnowTile_down),MyContentManager.GetTexture(MyContentManager.TextureName.SnowTile_up)};
+            Texture2D bitMap = MyContentManager.GetTexture(MyContentManager.TextureName.Map02);
+            Texture2D[] clouds = { MyContentManager.GetTexture(MyContentManager.TextureName.Clouds) };
+
+            
 
             MapStuff.Instance.map = new Tilemap(tiles,clouds, bitMap, 16);
 
+            MapStuff.Instance.partCollHandler = new GlobalParticleHandler(MyContentManager.GetTexture(MyContentManager.TextureName.SnowBall));
+
+            MapStuff.Instance.map.CreateDebugSnow();
 
             //Initialize Camera
             GUIStuff.Instance.camera = new Camera(graphics.GraphicsDevice.Viewport);
 
-            MapStuff.Instance.partCollHandler = new GlobalParticleHandler(Content.Load<Texture2D>("SnowBall"));
+            
 
             // TODO: use this.Content to load your game content here
         }

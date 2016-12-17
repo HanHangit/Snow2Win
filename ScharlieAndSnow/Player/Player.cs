@@ -101,13 +101,6 @@ namespace ScharlieAndSnow
                 {
                     _mov.X = -1;
                     Flip(Direction.Left);
-                
-                    for (int i = 0; i < 1; ++i)
-                    {
-                        Vector2 move = new Vector2((_mov.X * -1)/4, 0);
-                        move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-10, 10)));
-                        MapStuff.Instance.partCollHandler.AddParticle(_pos + playerTexture.Bounds.Size.ToVector2() / 2 + new Vector2(playerTexture.Bounds.Size.X / 2, 0) + new Vector2(0,playerTexture.Bounds.Size.Y / 2) + new Vector2(0, -5), 1, 3, move);
-                    }
                 }
 
 
@@ -116,14 +109,6 @@ namespace ScharlieAndSnow
                 {
                     _mov.X = 1;
                     Flip(Direction.Right);
-                
-
-                    for (int i = 0; i < 1; ++i)
-                    {
-                        Vector2 move = new Vector2((_mov.X * -1)/4, 0);
-                        move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-10, 10)));
-                        MapStuff.Instance.partCollHandler.AddParticle(_pos + playerTexture.Bounds.Size.ToVector2() / 2 - new Vector2(playerTexture.Bounds.Size.X / 2, 0) + new Vector2(0, playerTexture.Bounds.Size.Y / 2) + new Vector2(0, -5), 1, 3, move);
-                    }
                 }
                 //Collect Snow
                 if (pressedKeys[0] == PlayerManager.validKeys[_playerId][3])
