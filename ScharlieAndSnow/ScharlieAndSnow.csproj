@@ -44,6 +44,10 @@
     <Compile Include="Camera.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="GameStates\CreateGame.cs" />
+    <Compile Include="GameStates\IGameStates.cs" />
+    <Compile Include="GameStates\MainMenu.cs" />
+    <Compile Include="GameStates\PlayState.cs" />
     <Compile Include="ParticleSystem\PlayerModifikator.cs" />
     <Compile Include="ParticleSystem\Clouds.cs" />
     <Compile Include="ParticleSystem\GlobalParticleHandler.cs" />
@@ -62,6 +66,8 @@
     <Compile Include="Map\Tile.cs" />
     <Compile Include="Map\Tilemap.cs" />
     <Compile Include="MoreGeometry\Triangle.cs" />
+    <Compile Include="Tools\Constant.cs" />
+    <Compile Include="Tools\MyButton.cs" />
     <Compile Include="_Manager\MyContentManager.cs" />
     <Compile Include="_Manager\PlayerManager.cs" />
   </ItemGroup>

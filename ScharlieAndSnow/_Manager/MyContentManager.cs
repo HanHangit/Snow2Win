@@ -50,6 +50,9 @@ namespace ScharlieAndSnow
             textureDictionary.Add(TextureName.Clouds, Content.Load<Texture2D>("Clouds"));
             textureDictionary.Add(TextureName.SnowBall, Content.Load<Texture2D>("SnowBall"));
             textureDictionary.Add(TextureName.Player1, Content.Load<Texture2D>("Player1"));
+            textureDictionary.Add(TextureName.GoBUtton, Content.Load <Texture2D>("PlayButton"));
+            textureDictionary.Add(TextureName.BackGround, Content.Load<Texture2D>("BackGround"));
+            textureDictionary.Add(TextureName.ExitButton, Content.Load<Texture2D>("ExitButton"));
 
         }
         static void LoadFont()
@@ -67,7 +70,10 @@ namespace ScharlieAndSnow
             Map02,
             Clouds,
             SnowBall,
-            Player1
+            Player1,
+            GoBUtton,
+            ExitButton,
+            BackGround
         }
         public enum FontName
         {

@@ -11,7 +11,8 @@ namespace ScharlieAndSnow
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        SpriteFont font;
+        IGameState state;
+        EGameState prev = EGameState.None, curr = EGameState.Mainmenu;
 
         public Game1()
         {
@@ -29,16 +30,12 @@ namespace ScharlieAndSnow
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
-            PlayerManager.Instance.playerArray = new Player[2];
-            PlayerManager.Instance.playerArray[0] = new Player(0,new Vector2(200, 200), MyContentManager.GetTexture(MyContentManager.TextureName.Player1));
-            PlayerManager.Instance.playerArray[1] = new Player(1, new Vector2(300, 300), MyContentManager.GetTexture(MyContentManager.TextureName.Player1));
-
-
+            this.IsMouseVisible = true;
+            
             GraphicStuff.Instance.graphicDevice = GraphicsDevice;
 
-            graphics.PreferredBackBufferWidth = 1200;
-            graphics.PreferredBackBufferHeight = 1300;
+            graphics.PreferredBackBufferWidth = Constant.x;
+            graphics.PreferredBackBufferHeight = Constant.y;
 
             //graphics.ToggleFullScreen();
 
@@ -101,18 +98,12 @@ namespace ScharlieAndSnow
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            HandleGameStates();
+            curr = state.Update(gameTime);
 
-            //Update Player
-            for (int i = 0; i < PlayerManager.Instance.playerArray.Length; i++)
-                PlayerManager.Instance.playerArray[i].Update(gameTime);;
 
             // TODO: Add your update logic here
 
-            MapStuff.Instance.map.Update(gameTime);
-
-
-
-            MapStuff.Instance.partCollHandler.Update(gameTime);
 
             
 
@@ -125,35 +116,45 @@ namespace ScharlieAndSnow
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
             
             GraphicsDevice.SetRenderTarget(null);
 
             spriteBatch.Begin(transformMatrix: GUIStuff.Instance.camera.GetViewMatrix(gameTime));
+            state.Draw(spriteBatch);
 
-            MapStuff.Instance.map.Draw(spriteBatch);
-
-            MapStuff.Instance.partCollHandler.Draw(spriteBatch);
-
-            int fps =(int)( 1 / (float)gameTime.ElapsedGameTime.TotalSeconds);
-
-            spriteBatch.DrawString(MyContentManager.GetFont(MyContentManager.FontName.Arial),fps.ToString(), GUIStuff.Instance.camera.position, Color.White);
-
-            //spriteBatch.End();
-            
-            RenderTarget2D rendTarget2D = MapStuff.Instance.map.rendTarget;
-
-            //spriteBatch.Begin(transformMatrix: GUIStuff.Instance.camera.GetViewMatrix(gameTime));
-
-            spriteBatch.Draw(rendTarget2D, Vector2.Zero, Color.White);
-
-            //Draw Player
-            for (int i = 0; i < PlayerManager.Instance.playerArray.Length; i++)
-                PlayerManager.Instance.playerArray[i].Draw(spriteBatch);
-
+            int fps = (int)(1 / (float)gameTime.ElapsedGameTime.TotalSeconds);
+            spriteBatch.DrawString(MyContentManager.GetFont(MyContentManager.FontName.Arial), fps.ToString(), GUIStuff.Instance.camera.position, Color.White);
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+        void HandleGameStates()
+        {
+
+            if (prev != curr)
+            {
+
+                if (state != null)
+                    state.UnloadContent();
+
+                switch (curr)
+                {
+                    case EGameState.Mainmenu:
+                        state = new MainMenu();
+                        state.Initialize();
+                        state.LoadContent();
+                        break;
+                    case EGameState.PlayState:
+                        state = new PlayState();
+                        state.Initialize();
+                        state.LoadContent();
+                        break;
+                }
+            }
+            prev = curr;
         }
     }
 }
