@@ -51,7 +51,7 @@
     <Compile Include="ParticleSystem\PlayerModifikator.cs" />
     <Compile Include="ParticleSystem\Clouds.cs" />
     <Compile Include="ParticleSystem\GlobalParticleHandler.cs" />
-    <Compile Include="ParticleSystem\PowerUps.cs" />
+    <Compile Include="Player\PowerUps.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Singleton\GraphicStuff.cs" />
     <Compile Include="Singleton\GUIStuff.cs" />
@@ -67,6 +67,7 @@
     <Compile Include="Map\Tilemap.cs" />
     <Compile Include="MoreGeometry\Triangle.cs" />
     <Compile Include="Tools\Constant.cs" />
+    <Compile Include="Tools\GameInformation.cs" />
     <Compile Include="Tools\MyButton.cs" />
     <Compile Include="_Manager\MyContentManager.cs" />
     <Compile Include="_Manager\PlayerManager.cs" />

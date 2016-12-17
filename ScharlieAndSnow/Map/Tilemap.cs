@@ -33,14 +33,20 @@ namespace ScharlieAndSnow
 
 
 
-        public Tilemap(Texture2D[] textures, Texture2D[] clouds, Texture2D bitMap, int _tileSize)
+        public Tilemap(int _tileSize)
         {
-            textClouds = clouds;
+
+
+            //Initialize Map
+            tileTexture = new[]{ MyContentManager.GetTexture(MyContentManager.TextureName.SkyTile), MyContentManager.GetTexture(MyContentManager.TextureName.SnowTile),
+                                    MyContentManager.GetTexture(MyContentManager.TextureName.SnowTile_down),MyContentManager.GetTexture(MyContentManager.TextureName.SnowTile_up)};
+            Texture2D bitMap = MyContentManager.GetTexture(MyContentManager.TextureName.Map02);
+            textClouds = new[]{ MyContentManager.GetTexture(MyContentManager.TextureName.Clouds) };
+
             snowColor = new Color[bitMap.Width * _tileSize + bitMap.Height * _tileSize];
             particles.Capacity = 10000;
             stop = new Stopwatch();
             snowTexture = new Texture2D(GraphicStuff.Instance.graphicDevice, bitMap.Width * _tileSize, bitMap.Height * _tileSize);
-            tileTexture = textures;
             tileSize = _tileSize;
             tileMap = new Tile[bitMap.Width, bitMap.Height];
 
@@ -51,7 +57,7 @@ namespace ScharlieAndSnow
 
             rendTarget = new RenderTarget2D(GraphicStuff.Instance.graphicDevice, realSize.X, realSize.Y);
 
-            BuildMap(textures, bitMap);
+            BuildMap(tileTexture, bitMap);
 
             cloudList.Add(new Clouds(textClouds[0], new Vector2(100, 50), new Vector2(1f, 0), 1, 0.1f, 300, 10, 3));
             cloudList.Add(new Clouds(textClouds[0], new Vector2(500, 40), new Vector2(1f, 0), 1, 0.01f, 20, 7, 2));

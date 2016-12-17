@@ -27,13 +27,13 @@ namespace ScharlieAndSnow
         /// </summary>
         /// <param name="_number"></param>
         /// <param name="_text"></param>
-        public GlobalParticleHandler(Texture2D _text)
+        public GlobalParticleHandler()
         {
             stop = new Stopwatch();
             jopParticleDelete = new JobParticleDelete();
             particles = new List<Particle>();
-            text = _text;
-            partHandler = new ParticleCollisionHandler(_text);
+            text = MyContentManager.GetTexture(MyContentManager.TextureName.SnowBall);
+            partHandler = new ParticleCollisionHandler(text);
         }
 
         /// <summary>

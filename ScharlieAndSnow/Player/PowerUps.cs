@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ScharlieAndSnow
 {
-    abstract class PowerUp
+    class PowerUp
     {
         protected Texture2D text;
         public Vector2 position;
@@ -34,11 +34,16 @@ namespace ScharlieAndSnow
         }
 
         //Das PowerUp wird dem jeweiligem Spieler zugeordnet
-        public abstract void ApplyToPlayer(Player player);
+        public void ApplyToPlayer(Player player)
+        {
+            onPlayer = true;
+            player.ApplyPowerUp(this);
+        }
 
         public virtual void Update(GameTime gTime)
         {
-            if(onPlayer && temporaer)
+            
+            if (onPlayer && temporaer)
             {
                 timer -= (float)gTime.ElapsedGameTime.TotalSeconds;
                 if (timer <= 0)

@@ -18,16 +18,18 @@ namespace ScharlieAndSnow
     class Player
     {
         public Vector2 _pos;
-        public int temperature { get; private set; }
-        int maxTemperature;
+        public float temperature { get; private set; }
+        float maxTemperature;
         public bool isAlive { get; private set; }
-        float speed = 2;
+        float speed, jumpSpeed;
         float _points = 0;
         int _playerId;
         Vector2 _mov;
+        Vector2 snowballMove;
         Texture2D playerTexture;
         State _currentState;
         Direction _currentDirection;
+        List<PowerUp> modifikator;
 
 
         public Player(int _id, Vector2 _startPosition, Texture2D _playerTexture)
@@ -37,15 +39,18 @@ namespace ScharlieAndSnow
             playerTexture = _playerTexture;
             isAlive = true;
             _playerId = _id;
-            temperature = 100;
-            maxTemperature = 100;
+            temperature = GameInformation.Instance.playerInformation.maxHealth;
+            maxTemperature = GameInformation.Instance.playerInformation.maxHealth;
+            speed = GameInformation.Instance.playerInformation.speed;
+            jumpSpeed = GameInformation.Instance.playerInformation.jumpSpeed;
+            snowballMove = GameInformation.Instance.playerInformation.snowballMove;
             _pos = _startPosition;
-            
+            modifikator = new List<PowerUp>();
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if(_currentDirection == Direction.Right)
+            if (_currentDirection == Direction.Right)
                 spriteBatch.Draw(playerTexture, _pos);
             else
                 spriteBatch.Draw(playerTexture, _pos, null, Color.White, (float)Math.PI, new Vector2(playerTexture.Width, playerTexture.Height), 1, SpriteEffects.None, 0);
@@ -54,7 +59,17 @@ namespace ScharlieAndSnow
         {
             if (!isAlive) return;
 
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            {
+                new PowerUp(null, Vector2.Zero, 10, new PlayerModifikator(5, 2, 1, 0)).ApplyToPlayer(this);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.K))
+                ApplyDamage(1);
+
             ControllerCheckInput();
+
+            CheckPowerUps(gTime);
 
         }
 
@@ -75,24 +90,22 @@ namespace ScharlieAndSnow
                 _mov.Y += PlayerManager.gravity;
 
             _mov.X = 0;
-            if (pressedKeys.Length == 1 || pressedKeys.Length == 2)
+
+            for (int i = 0; i < pressedKeys.Length; ++i)
             {
-                // --- 2 Inputs! ---
-                if (pressedKeys.Length == 2)
-                    if ((pressedKeys[1] == PlayerManager.validKeys[_playerId][0] && _currentState == State.grounded) || _currentState == State.Start)
-                    {
-                        _mov.Y = -4;
-                        //Ist ganz praktisch, den Charakter einen Pixel nach oben zu bewegen, damit er auf jedenfall springen darf.
-                        _pos.Y -= 1;
-                        _currentState = State.jumping;
-                    }
-
-                // --- 1 Input! ---
-
-
+                if (pressedKeys[i] == PlayerManager.validKeys[_playerId][0] && _currentState != State.jumping)
+                {
+                    float realJump = jumpSpeed;
+                    foreach (PowerUp mode in modifikator)
+                        realJump += realJump * mode.mode.jump / 100;
+                    _mov.Y = -realJump;
+                    //Ist ganz praktisch, den Charakter einen Pixel nach oben zu bewegen, damit er auf jedenfall springen darf.
+                    _pos.Y -= 1;
+                    _currentState = State.jumping;
+                }
 
                 //Move UP
-                if ((pressedKeys[0] == PlayerManager.validKeys[_playerId][0] && _currentState == State.grounded) || _currentState == State.Start)
+                if ((pressedKeys[i] == PlayerManager.validKeys[_playerId][0] && _currentState == State.grounded) || _currentState == State.Start)
                 {
                     _mov.Y = -4;
                     //Ist ganz praktisch, den Charakter einen Pixel nach oben zu bewegen, damit er auf jedenfall springen darf.
@@ -101,27 +114,25 @@ namespace ScharlieAndSnow
                 }
 
                 //Move Left
-                if (pressedKeys[0] == PlayerManager.validKeys[_playerId][1])
+                if (pressedKeys[i] == PlayerManager.validKeys[_playerId][1])
                 {
                     _mov.X = -1;
                     Flip(Direction.Left);
                 }
-
-
                 //Move Right
-                if (pressedKeys[0] == PlayerManager.validKeys[_playerId][2])
+                if (pressedKeys[i] == PlayerManager.validKeys[_playerId][2])
                 {
                     _mov.X = 1;
                     Flip(Direction.Right);
                 }
                 //Collect Snow
-                if (pressedKeys[0] == PlayerManager.validKeys[_playerId][3])
+                if (pressedKeys[i] == PlayerManager.validKeys[_playerId][3])
                 {
-                    if (_currentDirection ==  Direction.Right)
+                    if (_currentDirection == Direction.Right)
                     {
                         if (MapStuff.Instance.map.CheckSnow(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 8)))
                         {
-                            MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 8),4);
+                            MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 8), 4);
                             _points++;
                             Console.WriteLine(_points);
                         }
@@ -135,12 +146,44 @@ namespace ScharlieAndSnow
                             Console.WriteLine(_points);
                         }
                     }
-
                 }
 
-
+                if (pressedKeys[i] == PlayerManager.validKeys[_playerId][4])
+                {
+                    if (_points > 0)
+                    {
+                        if (_currentDirection == Direction.Right)
+                            MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(playerTexture.Bounds.Size.X + 5,0), 5, 3, snowballMove);
+                        else
+                            MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(playerTexture.Bounds.Size.X - 5,0), 5, 3, new Vector2(snowballMove.X * -1, snowballMove.Y));
+                        Console.WriteLine(_points);
+                        _points--;
+                    }
+                }
             }
+
+            float realSpeed = speed;
+            foreach (PowerUp mode in modifikator)
+                realSpeed += realSpeed * mode.mode.speed / 100;
+            _mov.X *= realSpeed;
+
             CheckCollision(_mov); //Check ob die Bewegung funktioniert
+        }
+
+        public void ApplyPowerUp(PowerUp powerUp)
+        {
+            modifikator.Add(powerUp);
+            ToWarumUp((int)powerUp.mode.health);
+        }
+
+        void CheckPowerUps(GameTime gTime)
+        {
+            for (int i = 0; i < modifikator.Count; ++i)
+            {
+                modifikator[i].Update(gTime);
+                if (!modifikator[i].alive)
+                    modifikator.RemoveAt(i--);
+            }
         }
         public void Flip(Direction newDirection)
         {
@@ -154,7 +197,7 @@ namespace ScharlieAndSnow
             if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y - 17))
             && MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X, _pos.Y + playerTexture.Bounds.Size.Y - 17)))
             {
-                _pos.X += _mov.X * speed;
+                _pos.X += _mov.X;
 
             }
             //Collision Check Y-Achse
@@ -183,8 +226,14 @@ namespace ScharlieAndSnow
         /// <returns></returns>
         public void ApplyDamage(int damage)
         {
-            temperature -= damage;
-            if(temperature <= 0)
+            float realDamage = damage;
+            foreach (PowerUp p in modifikator)
+                realDamage -= realDamage * (p.mode.armor / 100f);
+
+            Console.WriteLine("Damage To Player" + realDamage);
+
+            temperature -= realDamage;
+            if (temperature <= 0)
             {
                 isAlive = false;
             }
@@ -198,6 +247,7 @@ namespace ScharlieAndSnow
         /// <returns></returns>
         public void ToWarumUp(int value)
         {
+            Console.WriteLine("HealthUp " + value);
             temperature += value;
             if (temperature > maxTemperature)
                 temperature = maxTemperature;

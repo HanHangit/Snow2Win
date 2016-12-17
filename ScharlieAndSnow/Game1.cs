@@ -56,19 +56,11 @@ namespace ScharlieAndSnow
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-
-            //Initialize Map
-            Texture2D[] tiles = { MyContentManager.GetTexture(MyContentManager.TextureName.SkyTile), MyContentManager.GetTexture(MyContentManager.TextureName.SnowTile),
-                                    MyContentManager.GetTexture(MyContentManager.TextureName.SnowTile_down),MyContentManager.GetTexture(MyContentManager.TextureName.SnowTile_up)};
-            Texture2D bitMap = MyContentManager.GetTexture(MyContentManager.TextureName.Map02);
-            Texture2D[] clouds = { MyContentManager.GetTexture(MyContentManager.TextureName.Clouds) };
-
             
 
-            MapStuff.Instance.map = new Tilemap(tiles,clouds, bitMap, 16);
+            MapStuff.Instance.map = new Tilemap(16);
 
-            MapStuff.Instance.partCollHandler = new GlobalParticleHandler(MyContentManager.GetTexture(MyContentManager.TextureName.SnowBall));
+            MapStuff.Instance.partCollHandler = new GlobalParticleHandler();
 
             MapStuff.Instance.map.CreateDebugSnow();
 
