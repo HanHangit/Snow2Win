@@ -73,7 +73,9 @@ namespace ScharlieAndSnow
                 //Bounds vom Player added
                 if((ply._pos + new Vector2(8,16) - p.position).Length() < p.radius + 8)
                 {
-                    p.alive = false;
+
+                    p.force = Vector2.Reflect(p.force, new Vector2(0, -1));
+
                     int numberOfSnow = (int)p.mass / 5;
                     for (int i = 0; i < numberOfSnow; ++i)
                     {
@@ -81,6 +83,7 @@ namespace ScharlieAndSnow
                         move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-30, 30)));
                         MapStuff.Instance.partCollHandler.AddParticle(p.position + new Vector2(0, -20), 1, 1, move);
                     }
+                    p.mass = 1;
                     return;
                 }
             }

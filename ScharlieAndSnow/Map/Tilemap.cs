@@ -76,7 +76,7 @@ namespace ScharlieAndSnow
                 textures[i].GetData(tileColor[i]);
 
                 //Für die Dreiecke der TileMap
-                if(i == 2 || i == 3)
+                if (i == 2 || i == 3)
                 {
                     Triangle skyTriangle;
                     if (i == 2)
@@ -90,7 +90,7 @@ namespace ScharlieAndSnow
                         if (!skyTriangle.intersect(new Vector2(j % tileSize, j / tileSize)))
                             tileColor[i][j] = tileColor[0][0];
                     }
-                }                
+                }
             }
 
 
@@ -124,9 +124,9 @@ namespace ScharlieAndSnow
                 {
                     Vector2 position = new Vector2(x * tileSize, y * tileSize);
                     if (!tileMap[x - 1, y].Walkable()
-                        && tileMap[x + 1, y].Walkable() 
-                        && tileMap[x,y].Walkable()                        
-                        && !tileMap[x,y+1].Walkable())
+                        && tileMap[x + 1, y].Walkable()
+                        && tileMap[x, y].Walkable()
+                        && !tileMap[x, y + 1].Walkable())
                     {
                         Triangle triangle = new Triangle(new[] {
                             new Vector2(triangleOffset + x * tileSize, y * tileSize),
@@ -135,7 +135,7 @@ namespace ScharlieAndSnow
                         });
                         //Console.WriteLine("Position: " + new Vector2(x * tileSize, y * tileSize));
                         //Console.WriteLine(triangle.ToString());
-                        tileMap[x, y] = new Tile(textures[2], new Vector2(x * tileSize, y * tileSize), 0,triangle);
+                        tileMap[x, y] = new Tile(textures[2], new Vector2(x * tileSize, y * tileSize), 0, triangle);
                         snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[2], 0, tileSize * tileSize);
                     }
 
@@ -156,6 +156,27 @@ namespace ScharlieAndSnow
                     }
                 }
             }
+
+
+        }
+
+        public void CreateDebugSnow()
+        {
+            for (int i = 0; i < 20; ++i)
+            {
+                int j = 0;
+                while (tileMap[i, j].Walkable())
+                {
+                    ++j;
+                }
+                --j;
+                for (int p = 0; p < 5; ++p)
+                    for (int k = 0; k < tileSize; ++k)
+                        for (int q = 0; q < tileSize; ++q)
+                            AddSnow(new Particle(MyContentManager.GetTexture(MyContentManager.TextureName.SnowBall),
+                                new Vector2((i - p) * tileSize + k, (j - p) * tileSize + q), 1, 1, Vector2.Zero));
+            }
+
         }
 
         /// <summary>
