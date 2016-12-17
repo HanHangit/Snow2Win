@@ -117,7 +117,7 @@ namespace ScharlieAndSnow
                     {
                         if (MapStuff.Instance.map.CheckSnow(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 8)))
                         {
-                            MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 8));
+                            MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 8),4);
                             _points++;
                             Console.WriteLine(_points);
                         }

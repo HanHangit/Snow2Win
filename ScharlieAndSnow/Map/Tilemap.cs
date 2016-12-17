@@ -237,6 +237,14 @@ namespace ScharlieAndSnow
                 return null;
         }
 
+        public void CollectSnow(Vector2 position, int radius)
+        {
+            for (int x = (int)position.X; x < position.X + radius + radius; ++x)
+                for (int y = (int)position.Y; y < position.Y + radius + radius; ++y)
+                {
+                    CollectSnow(new Vector2(x, y));
+                }
+        }
 
         //Zum Schnee einsammeln von der MAP!
         public void CollectSnow(Vector2 position)
