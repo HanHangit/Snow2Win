@@ -21,7 +21,7 @@ namespace ScharlieAndSnow
         float _points = 0;
         int _playerId;
         Vector2 _mov;
-        Vector2 _pos;
+        public Vector2 _pos;
         Texture2D playerTexture;
         State _currentState;
 
@@ -90,11 +90,27 @@ namespace ScharlieAndSnow
 
                 //Move Left
                 if (pressedKeys[0] == PlayerManager.validKeys[_playerId][1])
+                {
                     _mov.X -= 1;
+                    for (int i = 0; i < 1; ++i)
+                    {
+                        Vector2 move = new Vector2((_mov.X * -1)/4, 0);
+                        move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-10, 10)));
+                        MapStuff.Instance.partCollHandler.AddParticle(_pos + playerTexture.Bounds.Size.ToVector2() / 2 + new Vector2(playerTexture.Bounds.Size.X / 2, 0) + new Vector2(0,playerTexture.Bounds.Size.Y / 2) + new Vector2(0, -5), 1, 3, move);
+                    }
+                }
 
                 //Move Right
                 if (pressedKeys[0] == PlayerManager.validKeys[_playerId][2])
+                {
                     _mov.X += 1;
+                    for (int i = 0; i < 1; ++i)
+                    {
+                        Vector2 move = new Vector2((_mov.X * -1)/4, 0);
+                        move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-10, 10)));
+                        MapStuff.Instance.partCollHandler.AddParticle(_pos + playerTexture.Bounds.Size.ToVector2() / 2 - new Vector2(playerTexture.Bounds.Size.X / 2, 0) + new Vector2(0, playerTexture.Bounds.Size.Y / 2) + new Vector2(0, -5), 1, 3, move);
+                    }
+                }
                 //Collect Snow
                 if(pressedKeys[0] == PlayerManager.validKeys[_playerId][3])
                 {
