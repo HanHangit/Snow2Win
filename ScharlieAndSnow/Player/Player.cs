@@ -19,7 +19,8 @@ namespace ScharlieAndSnow
     {
         public Vector2 _pos;
         public int temperature { get; private set; }
-
+        int maxTemperature;
+        public bool isAlive { get; private set; }
         float speed = 2;
         float _points = 0;
         int _playerId;
@@ -34,8 +35,10 @@ namespace ScharlieAndSnow
             _currentState = State.Start;
             _currentDirection = Direction.Right;
             playerTexture = _playerTexture;
+            isAlive = true;
             _playerId = _id;
             temperature = 100;
+            maxTemperature = 100;
             _pos = _startPosition;
             
         }
@@ -49,6 +52,7 @@ namespace ScharlieAndSnow
         }
         public void Update(GameTime gTime)
         {
+            if (!isAlive) return;
 
             ControllerCheckInput();
 
@@ -171,16 +175,32 @@ namespace ScharlieAndSnow
             || !MapStuff.Instance.map.Walkable(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y)))
                 _pos.Y = _pos.Y - 1;
         }
+
         /// <summary>
-        /// jegliche Schadenquelle über diese Funktion für den Spieler
+        /// jegliche Schadenquelle für den Spieler über diese Funktion
         /// </summary>
         /// <param name="damage"></param>
         /// <returns></returns>
-        void ApplyDamage(int damage)
+        public void ApplyDamage(int damage)
         {
             temperature -= damage;
             if(temperature <= 0)
+            {
+                isAlive = false;
+            }
 
+        }
+
+        /// <summary>
+        /// Gibt den Spieler wärme (max. 100)
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public void ToWarumUp(int value)
+        {
+            temperature += value;
+            if (temperature > maxTemperature)
+                temperature = maxTemperature;
         }
     }
 }
