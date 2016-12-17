@@ -12,7 +12,7 @@ namespace ScharlieAndSnow
 {
 
 
-    public enum Direction { Up, Left, Right };
+    public enum Direction { Left, Right };
     public enum State { Start, grounded, jumping, Stun, Dying };
 
     class Player
@@ -24,11 +24,13 @@ namespace ScharlieAndSnow
         public Vector2 _pos;
         Texture2D playerTexture;
         State _currentState;
+        Direction _currentDirection;
 
 
         public Player(int _id, Vector2 _startPosition)
         {
             _currentState = State.Start;
+            _currentDirection = Direction.Right;
             _playerId = _id;
             _pos = _startPosition;
         }
@@ -38,7 +40,12 @@ namespace ScharlieAndSnow
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(playerTexture, _pos);
+            if(_currentDirection == Direction.Right)
+                spriteBatch.Draw(playerTexture, _pos);
+            else
+            {
+                spriteBatch.Draw(playerTexture, _pos, null, Color.White, (float)Math.PI, new Vector2(playerTexture.Width, playerTexture.Height), 1, SpriteEffects.None, 0);
+            }
         }
         public void Update(GameTime gTime)
         {
@@ -50,6 +57,7 @@ namespace ScharlieAndSnow
         /*  MapStuff.Instance.map.Walkable(); //position Walkable and CheckSnow
             MapStuff.Instance.map.CheckSnow(); Checkt ob dort Schnell liegt
             MapStuff.Instance.map.CollectSnow(); Sammelt Schnell auf (Funktion entfernt schnee und lässt nachrutschen)
+            MapStuff.Instance.partCollHandler.AddParticle(Vector2 _position, float _mass, float _radius, Vector2 move);
         */
 
 
@@ -79,6 +87,8 @@ namespace ScharlieAndSnow
 
                 // --- 1 Input! ---
 
+
+
                 //Move UP
                 if ((pressedKeys[0] == PlayerManager.validKeys[_playerId][0] && _currentState == State.grounded) || _currentState == State.Start)
                 {
@@ -91,7 +101,9 @@ namespace ScharlieAndSnow
                 //Move Left
                 if (pressedKeys[0] == PlayerManager.validKeys[_playerId][1])
                 {
-                    _mov.X -= 1;
+                    _mov.X = -1;
+                    Flip(Direction.Left);
+                
                     for (int i = 0; i < 1; ++i)
                     {
                         Vector2 move = new Vector2((_mov.X * -1)/4, 0);
@@ -100,10 +112,14 @@ namespace ScharlieAndSnow
                     }
                 }
 
+
                 //Move Right
                 if (pressedKeys[0] == PlayerManager.validKeys[_playerId][2])
                 {
-                    _mov.X += 1;
+                    _mov.X = 1;
+                    Flip(Direction.Right);
+                
+
                     for (int i = 0; i < 1; ++i)
                     {
                         Vector2 move = new Vector2((_mov.X * -1)/4, 0);
@@ -112,22 +128,38 @@ namespace ScharlieAndSnow
                     }
                 }
                 //Collect Snow
-                if(pressedKeys[0] == PlayerManager.validKeys[_playerId][3])
+                if (pressedKeys[0] == PlayerManager.validKeys[_playerId][3])
                 {
-                    if (MapStuff.Instance.map.CheckSnow(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 8)))
+                    if (_currentDirection ==  Direction.Right)
                     {
-                        //new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 5)
-                        MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 8));
-                        _points++;
-                        Console.WriteLine(_points);
+                        if (MapStuff.Instance.map.CheckSnow(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 8)))
+                        {
+                            MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 8));
+                            _points++;
+                            Console.WriteLine(_points);
+                        }
                     }
+                    else
+                    {
+                        if (MapStuff.Instance.map.CheckSnow(new Vector2(_pos.X, _pos.Y + playerTexture.Bounds.Size.Y + 8)))
+                        {
+                            MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X, _pos.Y + playerTexture.Bounds.Size.Y + 8));
+                            _points++;
+                            Console.WriteLine(_points);
+                        }
+                    }
+
                 }
-                
+
 
             }
             CheckCollision(_mov); //Check ob die Bewegung funktioniert
         }
+        public void Flip(Direction newDirection)
+        {
+            _currentDirection = newDirection;
 
+        }
         void CheckCollision(Vector2 _mov)
         {
             //Collision der linken obere Ecke sowie der rechten obere Ecke
