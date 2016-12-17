@@ -31,8 +31,8 @@ namespace ScharlieAndSnow
             // TODO: Add your initialization logic here
 
             PlayerManager.Instance.playerArray = new Player[2];
-            PlayerManager.Instance.playerArray[0] = new Player(0,new Vector2(200, 200));
-            PlayerManager.Instance.playerArray[1] = new Player(1, new Vector2(300, 300));
+            PlayerManager.Instance.playerArray[0] = new Player(0,new Vector2(200, 200), MyContentManager.GetTexture(MyContentManager.TextureName.Player1));
+            PlayerManager.Instance.playerArray[1] = new Player(1, new Vector2(300, 300), MyContentManager.GetTexture(MyContentManager.TextureName.Player1));
 
 
             GraphicStuff.Instance.graphicDevice = GraphicsDevice;
@@ -60,11 +60,6 @@ namespace ScharlieAndSnow
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //font = Content.Load<SpriteFont>("FPS");
-
-            //Initialize Player
-            for (int i = 0; i < PlayerManager.Instance.playerArray.Length; i++)
-                PlayerManager.Instance.playerArray[i].LoadContent(Content);
 
             //Initialize Map
             Texture2D[] tiles = { Content.Load<Texture2D>("SkyTile"), Content.Load<Texture2D>("SnowTile"),

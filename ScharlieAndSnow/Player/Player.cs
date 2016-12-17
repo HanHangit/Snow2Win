@@ -27,17 +27,15 @@ namespace ScharlieAndSnow
         Direction _currentDirection;
 
 
-        public Player(int _id, Vector2 _startPosition)
+        public Player(int _id, Vector2 _startPosition, Texture2D _playerTexture)
         {
+            playerTexture = _playerTexture;
             _currentState = State.Start;
             _currentDirection = Direction.Right;
             _playerId = _id;
             _pos = _startPosition;
         }
-        public void LoadContent(ContentManager content)
-        {
-            playerTexture = content.Load<Texture2D>("Player1");
-        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             if(_currentDirection == Direction.Right)

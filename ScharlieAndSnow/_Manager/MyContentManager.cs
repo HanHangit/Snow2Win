@@ -21,7 +21,7 @@ namespace ScharlieAndSnow
             Content = _content;
 
         }
-        public static Texture GetTexture(TextureName textureName)
+        public static Texture2D GetTexture(TextureName textureName)
         {
             if (textureDictionary.Count == 0)
             {
