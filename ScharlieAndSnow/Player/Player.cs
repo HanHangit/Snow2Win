@@ -17,11 +17,14 @@ namespace ScharlieAndSnow
 
     class Player
     {
+        public Vector2 _pos;
+        public int temperature { get; private set; }
+        int maxTemperature;
+        public bool isAlive { get; private set; }
         float speed = 2;
         float _points = 0;
         int _playerId;
         Vector2 _mov;
-        public Vector2 _pos;
         Texture2D playerTexture;
         State _currentState;
         Direction _currentDirection;
@@ -29,11 +32,15 @@ namespace ScharlieAndSnow
 
         public Player(int _id, Vector2 _startPosition, Texture2D _playerTexture)
         {
-            playerTexture = _playerTexture;
             _currentState = State.Start;
             _currentDirection = Direction.Right;
+            playerTexture = _playerTexture;
+            isAlive = true;
             _playerId = _id;
+            temperature = 100;
+            maxTemperature = 100;
             _pos = _startPosition;
+            
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -41,12 +48,11 @@ namespace ScharlieAndSnow
             if(_currentDirection == Direction.Right)
                 spriteBatch.Draw(playerTexture, _pos);
             else
-            {
                 spriteBatch.Draw(playerTexture, _pos, null, Color.White, (float)Math.PI, new Vector2(playerTexture.Width, playerTexture.Height), 1, SpriteEffects.None, 0);
-            }
         }
         public void Update(GameTime gTime)
         {
+            if (!isAlive) return;
 
             ControllerCheckInput();
 
@@ -57,8 +63,6 @@ namespace ScharlieAndSnow
             MapStuff.Instance.map.CollectSnow(); Sammelt Schnell auf (Funktion entfernt schnee und lässt nachrutschen)
             MapStuff.Instance.partCollHandler.AddParticle(Vector2 _position, float _mass, float _radius, Vector2 move);
         */
-
-
 
         void ControllerCheckInput()
         {
@@ -170,6 +174,33 @@ namespace ScharlieAndSnow
             while (!MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + playerTexture.Bounds.Size.Y))
             || !MapStuff.Instance.map.Walkable(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y)))
                 _pos.Y = _pos.Y - 1;
+        }
+
+        /// <summary>
+        /// jegliche Schadenquelle für den Spieler über diese Funktion
+        /// </summary>
+        /// <param name="damage"></param>
+        /// <returns></returns>
+        public void ApplyDamage(int damage)
+        {
+            temperature -= damage;
+            if(temperature <= 0)
+            {
+                isAlive = false;
+            }
+
+        }
+
+        /// <summary>
+        /// Gibt den Spieler wärme (max. 100)
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public void ToWarumUp(int value)
+        {
+            temperature += value;
+            if (temperature > maxTemperature)
+                temperature = maxTemperature;
         }
     }
 }
