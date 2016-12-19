@@ -59,14 +59,6 @@ namespace ScharlieAndSnow
         {
             if (!isAlive) return;
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
-            {
-                new PowerUp(null, Vector2.Zero, 10, new PlayerModifikator(5, 2, 1, 0)).ApplyToPlayer(this);
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.K))
-                ApplyDamage(1);
-
             ControllerCheckInput();
 
             CheckPowerUps(gTime);

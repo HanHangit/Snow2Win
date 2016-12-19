@@ -20,15 +20,13 @@ namespace ScharlieAndSnow
 
         public Rectangle view;
 
-        ContentManager Content;
-
         public float scale { get; private set; }
 
         public float speed { get; private set; }
 
         public Camera(Viewport _viewport)
         {
-           
+
 
             speed = 1;
             scale = 1;
@@ -38,7 +36,7 @@ namespace ScharlieAndSnow
 
         }
 
-        
+
 
         public void Reset()
         {
@@ -53,26 +51,60 @@ namespace ScharlieAndSnow
 
         public Matrix GetViewMatrix(GameTime gTime)
         {
+            //SomeInit Settings
             KeyboardState key = Keyboard.GetState();
-            float speed = 3;
+            float speed = 0.6f;
+            float minPosX = 0, minPosY = 0;
+            float maxPosX = 0, maxPosY = 0;
 
-            if (key.IsKeyDown(Keys.Left))
-                position.X -= speed;
-            if (key.IsKeyDown(Keys.Right))
-                position.X += speed;
-            if (key.IsKeyDown(Keys.Up))
-                position.Y -= speed;
-            if (key.IsKeyDown(Keys.Down))
-                position.Y += speed;
+            int offsetX = 0;
+            int offsetY = 0;
 
-            position.X = (int)position.X;
-            position.Y = (int)position.Y;
+            float help = float.MaxValue;
 
+            Vector2 scaleVector = Vector2.One;
+
+            Player[] playerArray = PlayerManager.Instance.playerArray;
+            if (playerArray != null)
+            {
+                offsetX = 100;
+                offsetY = 100;
+
+                for (int i = 0; i < playerArray.Length; ++i)
+                    if (playerArray[i]._pos.X < help)
+                        help = playerArray[i]._pos.X;
+
+                minPosX = help;
+                help = float.MaxValue;
+
+                for (int i = 0; i < playerArray.Length; ++i)
+                    if (playerArray[i]._pos.Y < help)
+                        help = playerArray[i]._pos.Y;
+
+                minPosY = help;
+                help = 0;
+
+                for (int i = 0; i < playerArray.Length; ++i)
+                    if (playerArray[i]._pos.X > help)
+                        help = playerArray[i]._pos.X;
+
+                maxPosX = help;
+                help = 0;
+
+                for (int i = 0; i < playerArray.Length; ++i)
+                    if (playerArray[i]._pos.Y > help)
+                        help = playerArray[i]._pos.Y;
+
+                maxPosY = help;
+
+                scaleVector = new Vector2(Math.Min(Math.Min(viewport.Width / (maxPosX - minPosX + 2*offsetX), 1), Math.Min(viewport.Height / (maxPosY - minPosY + 2*offsetY), 1)));
+            }
 
             view = new Rectangle(new Point((int)position.X, (int)position.Y), new Point(viewport.Width, viewport.Height));
 
-            return Matrix.CreateScale(scale)
-                * Matrix.CreateTranslation(new Vector3(-position, 1));
+            return
+                Matrix.CreateTranslation(new Vector3(-new Vector2(minPosX - offsetX, minPosY - offsetY), 1))
+                * Matrix.CreateScale(new Vector3(scaleVector, 1));
         }
 
     }

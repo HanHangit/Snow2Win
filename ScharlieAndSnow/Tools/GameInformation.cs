@@ -9,7 +9,7 @@ namespace ScharlieAndSnow
 {
     class PlayerInformation
     {
-        public float speed = 1;
+        public float speed = 5;
         public float jumpSpeed = 4;
         public float maxHealth = 100;
         public int particleForSnowball = 10;
