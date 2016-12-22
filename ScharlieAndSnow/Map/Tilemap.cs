@@ -243,23 +243,26 @@ namespace ScharlieAndSnow
                 return null;
         }
 
-        public void CollectSnow(Vector2 position, int radius)
+        public bool CollectSnow(Vector2 position, int radius)
         {
             for (int x = (int)position.X; x < position.X + radius + radius; ++x)
                 for (int y = (int)position.Y; y < position.Y + radius + radius; ++y)
                 {
-                    CollectSnow(new Vector2(x, y));
+                    if (CollectSnow(new Vector2(x, y)))
+                        return true;
                 }
+
+            return false;
         }
 
         //Zum Schnee einsammeln von der MAP!
-        public void CollectSnow(Vector2 position)
+        public bool CollectSnow(Vector2 position)
         {
             if (!CheckPosition(position))
-                return;
+                return false;
 
             if (!CheckSnow(position))
-                return;
+                return false;
 
             rendTarget.SetData(0, new Rectangle((int)position.X, (int)position.Y, 2, 2), new[] { new Color(0, 0, 0, 0) }, 0, 1);
             snowTiles[(int)position.X, (int)position.Y] = null;
@@ -282,6 +285,7 @@ namespace ScharlieAndSnow
                     CollectSnow(position + new Vector2(1, -1));
                 }
             }
+            return true;
         }
 
         bool CheckPosition(Vector2 p)
@@ -319,35 +323,18 @@ namespace ScharlieAndSnow
             if (!CheckPosition(p))
                 return;
 
-
-            int numberOfSnow = (int)p.mass;
-
             try
             {
                 snowTiles[(int)position.X, (int)position.Y] = p;
                 particles.Add(p);
                 rendTarget.SetData(0, new Rectangle((int)position.X, (int)position.Y, 2, 2), new[] { p.color, p.color, p.color, p.color }, 0, 1);
-                p.mass = 1;
             }
             catch (IndexOutOfRangeException)
             {
                 Console.WriteLine(p.position);
             }
 
-
-
-
-            p.radius = 1;
-
-            if (numberOfSnow <= 5)
-                return;
-
-            for (int i = 0; i < numberOfSnow; ++i)
-            {
-                Vector2 move = new Vector2(0, -1);
-                move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-30, 30)));
-                MapStuff.Instance.partCollHandler.AddParticle(position + new Vector2(0, -10), 1, 1, move);
-            }
+            Particle.SplitUpParticle(p,new Rectangle(position.ToPoint(),new Point(1,1)));
         }
 
         public void AddSnow(Particle p, Vector2 position)
@@ -365,27 +352,13 @@ namespace ScharlieAndSnow
                 snowTiles[(int)position.X, (int)position.Y] = p;
                 particles.Add(p);
                 rendTarget.SetData(0, new Rectangle((int)position.X, (int)position.Y, 2, 2), new[] { p.color, p.color, p.color, p.color }, 0, 1);
-                p.mass = 1;
             }
             catch (IndexOutOfRangeException)
             {
                 Console.WriteLine(position);
             }
 
-
-
-
-            p.radius = 1;
-
-            if (numberOfSnow <= 5)
-                return;
-
-            for (int i = 0; i < numberOfSnow; ++i)
-            {
-                Vector2 move = new Vector2(0, -1);
-                move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-30, 30)));
-                MapStuff.Instance.partCollHandler.AddParticle(position + new Vector2(0, -10), 1, 1, move);
-            }
+            Particle.SplitUpParticle(p, new Rectangle(position.ToPoint(), new Point(1, 1)));
         }
 
         public void Update(GameTime gameTime)

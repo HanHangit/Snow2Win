@@ -11,6 +11,7 @@ namespace ScharlieAndSnow
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        RasterizerState rasterizerState;
         IGameState state;
         EGameState prev = EGameState.None, curr = EGameState.Mainmenu;
 
@@ -36,6 +37,9 @@ namespace ScharlieAndSnow
 
             graphics.PreferredBackBufferWidth = Constant.x;
             graphics.PreferredBackBufferHeight = Constant.y;
+            graphics.PreferMultiSampling = true;
+
+            rasterizerState = new RasterizerState { MultiSampleAntiAlias = true };
 
             //graphics.ToggleFullScreen();
 
@@ -114,7 +118,7 @@ namespace ScharlieAndSnow
             
             GraphicsDevice.SetRenderTarget(null);
 
-            spriteBatch.Begin(transformMatrix: GUIStuff.Instance.camera.GetViewMatrix(gameTime));
+            spriteBatch.Begin(transformMatrix: GUIStuff.Instance.camera.GetViewMatrix(gameTime),rasterizerState: rasterizerState);
             state.Draw(spriteBatch);
 
             int fps = (int)(1 / (float)gameTime.ElapsedGameTime.TotalSeconds);

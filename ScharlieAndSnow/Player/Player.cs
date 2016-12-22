@@ -21,9 +21,21 @@ namespace ScharlieAndSnow
         public float temperature { get; private set; }
         float maxTemperature;
         public bool isAlive { get; private set; }
+
+        public Rectangle Bounds
+        {
+            get
+            {
+                return new Rectangle(_pos.ToPoint(), playerTexture.Bounds.Size);
+            }
+        }
+
         float speed, jumpSpeed;
         float _points = 0;
+        float timer, attackSpeed;
         int _playerId;
+        int amountSnowball;
+        int particleForSnowball;
         Vector2 _mov;
         Vector2 snowballMove;
         Texture2D playerTexture;
@@ -34,6 +46,9 @@ namespace ScharlieAndSnow
 
         public Player(int _id, Vector2 _startPosition, Texture2D _playerTexture)
         {
+            particleForSnowball = GameInformation.Instance.playerInformation.particleForSnowball;
+            attackSpeed = GameInformation.Instance.playerInformation.attackSpeed;
+            amountSnowball = 0;
             _currentState = State.Start;
             _currentDirection = Direction.Right;
             playerTexture = _playerTexture;
@@ -58,6 +73,8 @@ namespace ScharlieAndSnow
         public void Update(GameTime gTime)
         {
             if (!isAlive) return;
+
+            timer += (float)gTime.ElapsedGameTime.TotalSeconds;
 
             ControllerCheckInput();
 
@@ -122,34 +139,40 @@ namespace ScharlieAndSnow
                 {
                     if (_currentDirection == Direction.Right)
                     {
-                        if (MapStuff.Instance.map.CheckSnow(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 8)))
+                        if (MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 8), 4))
                         {
-                            MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 8), 4);
                             _points++;
-                            Console.WriteLine(_points);
                         }
                     }
                     else
                     {
-                        if (MapStuff.Instance.map.CheckSnow(new Vector2(_pos.X, _pos.Y + playerTexture.Bounds.Size.Y + 8)))
+                        if (MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X, _pos.Y + playerTexture.Bounds.Size.Y + 8), 4))
                         {
-                            MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X, _pos.Y + playerTexture.Bounds.Size.Y + 8), 4);
                             _points++;
-                            Console.WriteLine(_points);
                         }
                     }
+
+                    if (_points > particleForSnowball)
+                    {
+                        amountSnowball++;
+                        _points -= particleForSnowball;
+                        Console.WriteLine(amountSnowball);
+                    }
+
                 }
 
+                //Throw Snowball
                 if (pressedKeys[i] == PlayerManager.validKeys[_playerId][4])
                 {
-                    if (_points > 0)
+                    if (amountSnowball > 0 && timer >= attackSpeed)
                     {
+                        amountSnowball--;
+                        timer = 0;
+                        float snowballDamage = GameInformation.Instance.snowballInformation.damage;
                         if (_currentDirection == Direction.Right)
-                            MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(playerTexture.Bounds.Size.X + 5,0), 5, 3, snowballMove);
+                            MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(playerTexture.Bounds.Size.X + 5,0), 30, 5, snowballMove,snowballDamage);
                         else
-                            MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(playerTexture.Bounds.Size.X - 5,0), 5, 3, new Vector2(snowballMove.X * -1, snowballMove.Y));
-                        Console.WriteLine(_points);
-                        _points--;
+                            MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(-5,0), 30, 5, new Vector2(snowballMove.X * -1, snowballMove.Y),snowballDamage);
                     }
                 }
             }
@@ -216,7 +239,7 @@ namespace ScharlieAndSnow
         /// </summary>
         /// <param name="damage"></param>
         /// <returns></returns>
-        public void ApplyDamage(int damage)
+        public void ApplyDamage(float damage)
         {
             float realDamage = damage;
             foreach (PowerUp p in modifikator)

@@ -66,24 +66,21 @@ namespace ScharlieAndSnow
 
         void CalculateBallToPlayer(Particle p)
         {
+            if (!p.playerCollision)
+                return;
             Player[] players = PlayerManager.Instance.playerArray;
 
             foreach(Player ply in players)
             {
+                Rectangle player = ply.Bounds;
+                Rectangle particle = p.destRectangle;
+                particle.Location = (particle.Location.ToVector2() + 2*p.force).ToPoint();
                 //Bounds vom Player added
-                if((ply._pos + new Vector2(8,16) - p.position).Length() < p.radius + 8)
+                if(player.Intersects(particle))
                 {
-
-                    p.force = Vector2.Reflect(p.force, new Vector2(0, -1));
-
-                    int numberOfSnow = (int)p.mass / 5;
-                    for (int i = 0; i < numberOfSnow; ++i)
-                    {
-                        Vector2 move = new Vector2(0, -1);
-                        move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-30, 30)));
-                        MapStuff.Instance.partCollHandler.AddParticle(p.position + new Vector2(0, -20), 1, 1, move);
-                    }
-                    p.mass = 1;
+                    p.alive = false;
+                    ply.ApplyDamage(p.damage);
+                    Particle.SplitUpParticle(p,player);
                     return;
                 }
             }
@@ -93,6 +90,10 @@ namespace ScharlieAndSnow
         {
             for (int i = 0; i < particles.Count; ++i)
             {
+                CalculateBallToMap(particles[i]);
+                CalculateBallToPlayer(particles[i]);
+                if (!particles[i].alive)
+                    continue;
                 for (int j = i + 1; j < particles.Count; ++j)
                 {
                     
@@ -109,8 +110,6 @@ namespace ScharlieAndSnow
                     CalculateBallToBallCollision(p1, p2);
 
                 }
-                CalculateBallToMap(particles[i]);
-                CalculateBallToPlayer(particles[i]);
                 
             }
 

@@ -16,11 +16,11 @@ namespace ScharlieAndSnow
         public Viewport viewport { get; private set; }
 
         public Vector2 position;
+        Vector3 lastPos;
+        public Vector3 scale, lastScale;
         public Vector2 origin;
 
         public Rectangle view;
-
-        public float scale { get; private set; }
 
         public float speed { get; private set; }
 
@@ -28,10 +28,11 @@ namespace ScharlieAndSnow
         {
 
 
-            speed = 1;
-            scale = 1;
+            speed = GameInformation.Instance.cameraInformation.speed;
+            scale = Vector3.One;
             viewport = _viewport;
-            position = new Vector2(0, 0);
+            position = Vector2.Zero;
+            lastPos = Vector3.One;
             origin = new Vector2(viewport.Width / 2f, viewport.Height / 2f);
 
         }
@@ -40,8 +41,8 @@ namespace ScharlieAndSnow
 
         public void Reset()
         {
-            position = new Vector2(0, 0);
-            scale = 1;
+            position = Vector2.Zero;
+            scale = Vector3.One;
             origin = new Vector2(viewport.Width / 2f, viewport.Height / 2f);
         }
 
@@ -53,7 +54,6 @@ namespace ScharlieAndSnow
         {
             //SomeInit Settings
             KeyboardState key = Keyboard.GetState();
-            float speed = 0.6f;
             float minPosX = 0, minPosY = 0;
             float maxPosX = 0, maxPosY = 0;
 
@@ -62,13 +62,12 @@ namespace ScharlieAndSnow
 
             float help = float.MaxValue;
 
-            Vector2 scaleVector = Vector2.One;
-
             Player[] playerArray = PlayerManager.Instance.playerArray;
+
             if (playerArray != null)
             {
-                offsetX = 100;
-                offsetY = 100;
+                offsetX = GameInformation.Instance.cameraInformation.offsetX;
+                offsetY = GameInformation.Instance.cameraInformation.offsetY;
 
                 for (int i = 0; i < playerArray.Length; ++i)
                     if (playerArray[i]._pos.X < help)
@@ -97,14 +96,25 @@ namespace ScharlieAndSnow
 
                 maxPosY = help;
 
-                scaleVector = new Vector2(Math.Min(Math.Min(viewport.Width / (maxPosX - minPosX + 2*offsetX), 1), Math.Min(viewport.Height / (maxPosY - minPosY + 2*offsetY), 1)));
+                scale = new Vector3(Math.Min(Math.Min(viewport.Width / (maxPosX - minPosX + 2*offsetX),(viewport.Height / (maxPosY - minPosY + 2*offsetY))),1),
+                    Math.Min(Math.Min(viewport.Width / (maxPosX - minPosX + 2 * offsetX), viewport.Height / (maxPosY - minPosY + 2 * offsetY)),1),
+                     1);
             }
 
             view = new Rectangle(new Point((int)position.X, (int)position.Y), new Point(viewport.Width, viewport.Height));
+            position = new Vector2(minPosX - offsetX, minPosY - offsetY);
+
+            Vector3 newPos = Vector3.Lerp( lastPos, new Vector3(position, 1), speed);
+            Vector3 newScale = Vector3.Lerp(lastScale, scale,  speed);
+
+            position = new Vector2((int)newPos.X,(int)newPos.Y);
+
+            lastPos = newPos;
+            lastScale = newScale;
 
             return
-                Matrix.CreateTranslation(new Vector3(-new Vector2(minPosX - offsetX, minPosY - offsetY), 1))
-                * Matrix.CreateScale(new Vector3(scaleVector, 1));
+                Matrix.CreateTranslation(new Vector3(-(int)newPos.X,-(int)newPos.Y,1))
+                * Matrix.CreateScale(newScale);
         }
 
     }

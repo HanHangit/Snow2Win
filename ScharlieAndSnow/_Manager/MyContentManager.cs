@@ -48,7 +48,7 @@ namespace ScharlieAndSnow
             textureDictionary.Add(TextureName.SnowTile_up, Content.Load<Texture2D>("MapTiles/SnowTile_Up"));
             textureDictionary.Add(TextureName.Map02, Content.Load<Texture2D>("Map02"));
             textureDictionary.Add(TextureName.Clouds, Content.Load<Texture2D>("Clouds"));
-            textureDictionary.Add(TextureName.SnowBall, Content.Load<Texture2D>("SnowBall"));
+            textureDictionary.Add(TextureName.SnowBall, Content.Load<Texture2D>("Schneeball"));
             textureDictionary.Add(TextureName.Player1, Content.Load<Texture2D>("Player1"));
             textureDictionary.Add(TextureName.GoBUtton, Content.Load <Texture2D>("PlayButton"));
             textureDictionary.Add(TextureName.BackGround, Content.Load<Texture2D>("BackGround"));
