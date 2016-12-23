@@ -12,7 +12,7 @@ namespace ScharlieAndSnow
     {
         protected Texture2D text;
         public Vector2 position;
-        bool onPlayer, temporaer;
+        public bool onPlayer, temporaer;
         public bool alive;
         float timer;
         public PlayerModifikator mode;
@@ -28,7 +28,7 @@ namespace ScharlieAndSnow
                 temporaer = true;
 
 
-
+            onPlayer = false;
             text = _text;
             position = _position;
         }
@@ -42,7 +42,18 @@ namespace ScharlieAndSnow
 
         public virtual void Update(GameTime gTime)
         {
-            
+            if (!onPlayer)
+            {
+                foreach (Player ply in PlayerManager.Instance.playerArray)
+                {
+                    if (ply.Bounds.Intersects(new Rectangle(position.ToPoint(), text.Bounds.Size)))
+                    {
+                        ApplyToPlayer(ply);
+                        break;
+                    }
+                }
+            }
+
             if (onPlayer && temporaer)
             {
                 timer -= (float)gTime.ElapsedGameTime.TotalSeconds;
@@ -54,7 +65,10 @@ namespace ScharlieAndSnow
         public virtual void Draw(SpriteBatch batch)
         {
             if (!onPlayer)
+            {
+                
                 batch.Draw(text, position, Color.White);
+            }
         }
     }
 }

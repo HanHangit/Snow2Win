@@ -169,10 +169,11 @@ namespace ScharlieAndSnow
                         amountSnowball--;
                         timer = 0;
                         float snowballDamage = GameInformation.Instance.snowballInformation.damage;
+                        int snowballSize = GameInformation.Instance.snowballInformation.size;
                         if (_currentDirection == Direction.Right)
-                            MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(playerTexture.Bounds.Size.X + 5,0), 30, 5, snowballMove,snowballDamage);
+                            MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(playerTexture.Bounds.Size.X + 5,0), 30, snowballSize, snowballMove,snowballDamage);
                         else
-                            MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(-5,0), 30, 5, new Vector2(snowballMove.X * -1, snowballMove.Y),snowballDamage);
+                            MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(-5,0), 30, snowballSize, new Vector2(snowballMove.X * -1, snowballMove.Y),snowballDamage);
                     }
                 }
             }

@@ -25,9 +25,12 @@ namespace ScharlieAndSnow
         public Color[] snowColor;
 
         public Particle[,] snowTiles;
+
         public List<Particle> particles = new List<Particle>();
 
         public List<Clouds> cloudList = new List<Clouds>();
+
+        public List<PowerUp> powerUpList = new List<PowerUp>();
 
         Texture2D[] textClouds;
 
@@ -63,6 +66,8 @@ namespace ScharlieAndSnow
             cloudList.Add(new Clouds(textClouds[0], new Vector2(500, 40), new Vector2(1f, 0), 1, 0.01f, 20, 7, 2));
             cloudList.Add(new Clouds(textClouds[0], new Vector2(400, 20), new Vector2(4f, 0), 1, 0.2f, 50, 6, 2));
             cloudList.Add(new Clouds(textClouds[0], new Vector2(700, 80), new Vector2(2f, 0), 1, 0.07f, 180, 13, 4));
+
+            powerUpList.Add(new PowerUp(MyContentManager.GetTexture(MyContentManager.TextureName.Tree01), new Vector2(1000, 1300), 20, new PlayerModifikator(10, 20, 10, 50)));
         }
 
         private void BuildMap(Texture2D[] textures, Texture2D bitMap)
@@ -363,6 +368,15 @@ namespace ScharlieAndSnow
 
         public void Update(GameTime gameTime)
         {
+            for(int i = 0; i < powerUpList.Count; ++i)
+            {
+                if (powerUpList[i].onPlayer)
+                    powerUpList.RemoveAt(i--);
+                else
+                    powerUpList[i].Update(gameTime);
+            }
+
+
             for (int i = 0; i < cloudList.Count; ++i)
             {
                 if (cloudList[i].alive)
@@ -374,6 +388,7 @@ namespace ScharlieAndSnow
 
         public void Draw(SpriteBatch spriteBatch)
         {
+
             /*
             for (int x = 0; x < tileMap.GetLength(0); x++)
             {
@@ -393,6 +408,9 @@ namespace ScharlieAndSnow
 
             foreach (Clouds c in cloudList)
                 c.Draw(spriteBatch);
+
+            foreach (PowerUp p in powerUpList)
+                p.Draw(spriteBatch);
 
             /*
             foreach (Particle p in particles)

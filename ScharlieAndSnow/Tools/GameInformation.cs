@@ -27,6 +27,7 @@ namespace ScharlieAndSnow
     class SnowballInformation
     {
         public float damage = 5f;
+        public int size = 6;
     }
     class GameInformation
     {

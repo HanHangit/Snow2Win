@@ -42,6 +42,7 @@ namespace ScharlieAndSnow
 
         static void LoadTexture()
         {
+            textureDictionary.Add(TextureName.Tree01, Content.Load<Texture2D>("Tree01"));
             textureDictionary.Add(TextureName.SkyTile, Content.Load<Texture2D>("SkyTile"));
             textureDictionary.Add(TextureName.SnowTile, Content.Load<Texture2D>("SnowTile"));
             textureDictionary.Add(TextureName.SnowTile_down, Content.Load<Texture2D>("MapTiles/SnowTile_down"));
@@ -75,7 +76,8 @@ namespace ScharlieAndSnow
             GoBUtton,
             ExitButton,
             BackGround,
-            BackGround_1270x720
+            BackGround_1270x720,
+            Tree01
         }
         public enum FontName
         {
