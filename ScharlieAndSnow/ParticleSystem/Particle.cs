@@ -61,6 +61,23 @@ namespace ScharlieAndSnow
             destRectangle = new Rectangle((int)_position.X, (int)_position.Y, (int)_radius, (int)_radius);
         }
 
+        public Particle(Texture2D _text, Vector2 _position, float _mass, float _radius, Vector2 move, bool _PlayerCollision, bool _collision)
+        {
+            playerCollision = _PlayerCollision;
+            damage = 0;
+            color = Color.White;
+            position = _position + new Vector2(radius, radius);
+            if (Particle.particleText == null)
+                particleText = _text;
+            mass = _mass;
+            alive = true;
+            radius = _radius;
+            force = move;
+            noCollision = true;
+
+            destRectangle = new Rectangle((int)_position.X, (int)_position.Y, (int)_radius, (int)_radius);
+        }
+
         public Particle(Texture2D _text, Vector2 _position, float _mass, float _radius, Vector2 move)
         {
             playerCollision = true;
@@ -150,7 +167,7 @@ namespace ScharlieAndSnow
                     particleRect = new Rectangle(p.position.ToPoint(), new Point(2, 2));
                 }
 
-                MapStuff.Instance.partCollHandler.AddParticle(p.position, 1, 4, move, false);
+                MapStuff.Instance.partCollHandler.AddParticle(p.position, 1, 3, move, false, false);
             }
         }
         public static void SplitUpParticle(Particle p)
@@ -166,7 +183,7 @@ namespace ScharlieAndSnow
             {
                 Vector2 move = new Vector2(0, -1);
                 move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-30, 30)));
-                MapStuff.Instance.partCollHandler.AddParticle(p.position + new Vector2(0, -10), 1, 6, move);
+                MapStuff.Instance.partCollHandler.AddParticle(p.position + new Vector2(0, -10), 1, 3, move,false, false);
             }
         }
 

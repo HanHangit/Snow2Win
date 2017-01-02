@@ -55,6 +55,11 @@ namespace ScharlieAndSnow
             particles.Add(new Particle(text, _position + move, _mass, _radius, move,playerCollision));
         }
 
+        public void AddParticle(Vector2 _position, float _mass, float _radius, Vector2 move, bool playerCollision, bool mapCollision)
+        {
+            particles.Add(new Particle(text, _position + move, _mass, _radius, move, playerCollision,mapCollision));
+        }
+
         public void AddParticle(Vector2 _position, float _mass, float _radius, Vector2 move,float damage)
         {
             particles.Add(new Particle(text, _position + move, _mass, _radius, move,damage));
