@@ -13,8 +13,15 @@ namespace ScharlieAndSnow
         public float jumpSpeed = 4;
         public float maxHealth = 100;
         public int particleForSnowball = 10;
-        public Vector2 snowballMove = new Vector2(10, -3);
+        public Vector2 snowballMove = new Vector2(10, 0);
         public float attackSpeed = 0.3f; //Seconds
+    }
+
+    class MapInformation
+    {
+        public float powerUpTimer = 20;
+        public float cloudSpawnTime = 20;
+        public int maxAmountClouds = 5;
     }
 
     class CameraInformation
@@ -36,6 +43,7 @@ namespace ScharlieAndSnow
         public PlayerInformation playerInformation = new PlayerInformation();
         public CameraInformation cameraInformation = new CameraInformation();
         public SnowballInformation snowballInformation = new SnowballInformation();
+        public MapInformation mapInformation = new MapInformation();
 
         static GameInformation instance;
         public static GameInformation Instance

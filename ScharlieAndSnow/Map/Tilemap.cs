@@ -28,18 +28,19 @@ namespace ScharlieAndSnow
 
         public List<Particle> particles = new List<Particle>();
 
-        public List<Clouds> cloudList = new List<Clouds>();
-
-        public List<PowerUp> powerUpList = new List<PowerUp>();
-
         Texture2D[] textClouds;
+
+        PowerUpSpawner powerUpSpawner;
+
+        CloudSpawner cloudSpawner;
 
 
 
         public Tilemap(int _tileSize)
         {
 
-
+            powerUpSpawner = new PowerUpSpawner();
+            cloudSpawner = new CloudSpawner();
             //Initialize Map
             tileTexture = new[]{ MyContentManager.GetTexture(MyContentManager.TextureName.SkyTile), MyContentManager.GetTexture(MyContentManager.TextureName.SnowTile),
                                     MyContentManager.GetTexture(MyContentManager.TextureName.SnowTile_down),MyContentManager.GetTexture(MyContentManager.TextureName.SnowTile_up)};
@@ -61,13 +62,6 @@ namespace ScharlieAndSnow
             rendTarget = new RenderTarget2D(GraphicStuff.Instance.graphicDevice, realSize.X, realSize.Y);
 
             BuildMap(tileTexture, bitMap);
-
-            cloudList.Add(new Clouds(textClouds[0], new Vector2(100, 50), new Vector2(1f, 0), 1, 0.1f, 300, 10, 3));
-            cloudList.Add(new Clouds(textClouds[0], new Vector2(500, 40), new Vector2(1f, 0), 1, 0.01f, 20, 7, 2));
-            cloudList.Add(new Clouds(textClouds[0], new Vector2(400, 20), new Vector2(4f, 0), 1, 0.2f, 50, 6, 2));
-            cloudList.Add(new Clouds(textClouds[0], new Vector2(700, 80), new Vector2(2f, 0), 1, 0.07f, 180, 13, 4));
-
-            powerUpList.Add(new PowerUp(MyContentManager.GetTexture(MyContentManager.TextureName.Tree01), new Vector2(1000, 1300), 20, new PlayerModifikator(10, 20, 10, 50)));
         }
 
         private void BuildMap(Texture2D[] textures, Texture2D bitMap)
@@ -113,16 +107,23 @@ namespace ScharlieAndSnow
                 {
                     if (colores[y * tileMap.GetLength(0) + x] == Color.White)
                     {
-                        // Grass
+                        //Sky
                         tileMap[x, y] = new Tile(textures[0], new Vector2(x * tileSize, y * tileSize), 0);
                         snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[0], 0, tileSize * tileSize);
                     }
+                    else if (colores[y * tileMap.GetLength(0) + x] == new Color(237,28,36))
+                    {
+                        tileMap[x, y] = new Tile(textures[0], new Vector2(x * tileSize, y * tileSize), 0);
+                        snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[0], 0, tileSize * tileSize);
+                        powerUpSpawner.AddTile(tileMap[x, y]);
+                    }
                     else
                     {
-                        // Stein
+                        //Stone
                         tileMap[x, y] = new Tile(textures[1], new Vector2(x * tileSize, y * tileSize), 1);
                         snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[1], 0, tileSize * tileSize);
                     }
+
                     if (x % bitMap.Width == 0)
                         Console.WriteLine((int)(100 * (x % bitMap.Width + y * bitMap.Width) / (float)(bitMap.Width * bitMap.Height)));
 
@@ -368,26 +369,17 @@ namespace ScharlieAndSnow
 
         public void Update(GameTime gameTime)
         {
-            for(int i = 0; i < powerUpList.Count; ++i)
-            {
-                if (powerUpList[i].onPlayer)
-                    powerUpList.RemoveAt(i--);
-                else
-                    powerUpList[i].Update(gameTime);
-            }
 
+            powerUpSpawner.Update(gameTime);
+            cloudSpawner.Update(gameTime);
 
-            for (int i = 0; i < cloudList.Count; ++i)
-            {
-                if (cloudList[i].alive)
-                    cloudList[i].Update(gameTime);
-                else
-                    cloudList.RemoveAt(i--);
-            }
+            
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
+
+            
 
             /*
             for (int x = 0; x < tileMap.GetLength(0); x++)
@@ -406,11 +398,8 @@ namespace ScharlieAndSnow
 
             spriteBatch.Draw(snowTexture, Vector2.Zero, Color.White);
 
-            foreach (Clouds c in cloudList)
-                c.Draw(spriteBatch);
-
-            foreach (PowerUp p in powerUpList)
-                p.Draw(spriteBatch);
+            cloudSpawner.Draw(spriteBatch);
+            powerUpSpawner.Draw(spriteBatch);
 
             /*
             foreach (Particle p in particles)

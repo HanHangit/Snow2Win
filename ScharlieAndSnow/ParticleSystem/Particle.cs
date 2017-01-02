@@ -150,7 +150,7 @@ namespace ScharlieAndSnow
                     particleRect = new Rectangle(p.position.ToPoint(), new Point(2, 2));
                 }
 
-                MapStuff.Instance.partCollHandler.AddParticle(p.position, 1, 1, move, false);
+                MapStuff.Instance.partCollHandler.AddParticle(p.position, 1, 4, move, false);
             }
         }
         public static void SplitUpParticle(Particle p)
@@ -166,7 +166,7 @@ namespace ScharlieAndSnow
             {
                 Vector2 move = new Vector2(0, -1);
                 move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-30, 30)));
-                MapStuff.Instance.partCollHandler.AddParticle(p.position + new Vector2(0, -10), 1, 1, move);
+                MapStuff.Instance.partCollHandler.AddParticle(p.position + new Vector2(0, -10), 1, 6, move);
             }
         }
 

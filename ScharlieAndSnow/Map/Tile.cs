@@ -11,13 +11,15 @@ namespace ScharlieAndSnow
 {
     class Tile
     {
-        Vector2 position;
+        public Vector2 position;
         public Texture2D texture;
         int id;
         Triangle triangle;
+        public bool hasPowerUp;
 
         public Tile(Texture2D _texture, Vector2 _position, int _id)
         {
+            hasPowerUp = false;
             texture = _texture;
             position = _position;
             id = _id;
@@ -40,7 +42,7 @@ namespace ScharlieAndSnow
         //Für die Initalisierung der Map vonnöten.
         public bool Walkable()
         {
-            return (id == 0);
+            return id == 0;
         }
 
         public bool Walkable(Vector2 position)
