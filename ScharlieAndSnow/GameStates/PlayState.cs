@@ -42,8 +42,8 @@ namespace ScharlieAndSnow
         public void Initialize()
         {
             PlayerManager.Instance.playerArray = new Player[2];
-            PlayerManager.Instance.playerArray[0] = new Player(0,new Vector2(200, 200), MyContentManager.GetTexture(MyContentManager.TextureName.Player1));
-            PlayerManager.Instance.playerArray[1] = new Player(1, new Vector2(300, 300), MyContentManager.GetTexture(MyContentManager.TextureName.Player1));
+            PlayerManager.Instance.playerArray[0] = new Player(0,new Vector2(200, 200), MyContentManager.GetTexture(MyContentManager.TextureName.mage),32,32);
+            PlayerManager.Instance.playerArray[1] = new Player(1, new Vector2(300, 300), MyContentManager.GetTexture(MyContentManager.TextureName.mage),32,32);
 
         }
 

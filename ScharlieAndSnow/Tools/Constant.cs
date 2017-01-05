@@ -9,6 +9,8 @@ namespace ScharlieAndSnow
 {
     public class Constant
     {
+        public static Game1 Gameref {
+            get; set; }
         public static int x = 1270;
         public static int y = 720;
         /// <summary>
