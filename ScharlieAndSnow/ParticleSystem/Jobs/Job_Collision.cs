@@ -29,7 +29,6 @@ namespace ScharlieAndSnow
         {
             if (p1.noCollision)
                 return;
-
             Vector2 collision = p1.position - p2.position;
             float distance = collision.Length();
             if (distance == 0.0)

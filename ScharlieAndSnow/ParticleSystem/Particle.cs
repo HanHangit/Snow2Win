@@ -24,11 +24,13 @@ namespace ScharlieAndSnow
 
         public static Texture2D particleText;
 
-        static float drag = -0.003f;
+        static float drag;
 
-        static Vector2 gravity = new Vector2(0, 0.05f);
+        static Vector2 gravity;
         public Particle(Texture2D _text, Vector2 _position, float _mass, float _radius, Vector2 move, float _damage)
         {
+            gravity = GameInformation.Instance.mapInformation.gravity;
+            drag = GameInformation.Instance.mapInformation.drag;
             playerCollision = true;
             damage = _damage;
             color = Color.White;
@@ -46,6 +48,8 @@ namespace ScharlieAndSnow
 
         public Particle(Texture2D _text, Vector2 _position, float _mass, float _radius, Vector2 move, bool _PlayerCollision)
         {
+            gravity = GameInformation.Instance.mapInformation.gravity;
+            drag = GameInformation.Instance.mapInformation.drag;
             playerCollision = _PlayerCollision;
             damage = 0;
             color = Color.White;
@@ -63,6 +67,8 @@ namespace ScharlieAndSnow
 
         public Particle(Texture2D _text, Vector2 _position, float _mass, float _radius, Vector2 move, bool _PlayerCollision, bool _collision)
         {
+            gravity = GameInformation.Instance.mapInformation.gravity;
+            drag = GameInformation.Instance.mapInformation.drag;
             playerCollision = _PlayerCollision;
             damage = 0;
             color = Color.White;
@@ -80,6 +86,8 @@ namespace ScharlieAndSnow
 
         public Particle(Texture2D _text, Vector2 _position, float _mass, float _radius, Vector2 move)
         {
+            gravity = GameInformation.Instance.mapInformation.gravity;
+            drag = GameInformation.Instance.mapInformation.drag;
             playerCollision = true;
             damage = 0;
             color = Color.White;
@@ -109,7 +117,7 @@ namespace ScharlieAndSnow
         {
             force += gravity;
 
-            force += drag * force;
+            force -= drag * force * force.Length();
 
             position += force;
         }
@@ -128,7 +136,7 @@ namespace ScharlieAndSnow
             Vector2 move = p.force;
 
 
-
+            
             while (move.X == p.force.X && move.Y == p.force.Y && !(move.X == 0 && move.Y == 0))
             {
                 lastPartPos -= p.force;
@@ -140,7 +148,7 @@ namespace ScharlieAndSnow
                     move.Y *= -1;
 
             }
-
+            
 
             p.radius = 1;
 
@@ -159,13 +167,14 @@ namespace ScharlieAndSnow
                 Rectangle particleRect = new Rectangle(p.position.ToPoint(), new Point(2, 2));
 
                 move = Vector2.Normalize(move);
-                move *= 2;
-
+                move *= MapStuff.Instance.rnd.Next(100, 1000) / 100f;
+                /*
                 while (particleRect.Intersects(collisionObject))
                 {
                     p.position += move;
                     particleRect = new Rectangle(p.position.ToPoint(), new Point(2, 2));
                 }
+                */
 
                 MapStuff.Instance.partCollHandler.AddParticle(p.position, 1, 3, move, false, false);
             }
@@ -183,7 +192,8 @@ namespace ScharlieAndSnow
             {
                 Vector2 move = new Vector2(0, -1);
                 move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-30, 30)));
-                MapStuff.Instance.partCollHandler.AddParticle(p.position + new Vector2(0, -10), 1, 3, move,false, false);
+                move *= MapStuff.Instance.rnd.Next(100, 1000) / 100f;
+                MapStuff.Instance.partCollHandler.AddParticle(p.position + new Vector2(0, -10), 1, 3, move, false, false);
             }
         }
 
