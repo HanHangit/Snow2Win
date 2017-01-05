@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using ScharlieAndSnow.Tools;
 
 namespace ScharlieAndSnow
 {
@@ -26,7 +27,7 @@ namespace ScharlieAndSnow
         {
             get
             {
-                return new Rectangle(_pos.ToPoint(), playerTexture.Bounds.Size);
+                return new Rectangle(_pos.ToPoint().X, _pos.ToPoint().Y, textureWidth, textureHeight);
             }
         }
 
@@ -42,33 +43,47 @@ namespace ScharlieAndSnow
         State _currentState;
         Direction _currentDirection;
         List<PowerUp> modifikator;
+        AnimatedSprite sprite;
+        int  textureWidth, textureHeight;
 
 
-        public Player(int _id, Vector2 _startPosition, Texture2D _playerTexture)
+
+        public Player(int _id, Vector2 _startPosition, Texture2D _playerTexture, int _textureWidth, int _textureHeight)
         {
-            particleForSnowball = GameInformation.Instance.playerInformation.particleForSnowball;
-            attackSpeed = GameInformation.Instance.playerInformation.attackSpeed;
+
             amountSnowball = 0;
             _currentState = State.Start;
             _currentDirection = Direction.Right;
             playerTexture = _playerTexture;
             isAlive = true;
             _playerId = _id;
+            textureWidth = _textureWidth;
+            textureHeight = _textureHeight;
+
+            _pos = _startPosition;
+            modifikator = new List<PowerUp>();
+            //Animation
+            this.sprite = new AnimatedSprite(playerTexture, Constant.Gameref.PlayerAnimations);
+            this.sprite.CurrentAnimation = AnimationKey.WalkRight;
+            #region GameInformationValues
+            particleForSnowball = GameInformation.Instance.playerInformation.particleForSnowball;
+            attackSpeed = GameInformation.Instance.playerInformation.attackSpeed;
+
             temperature = GameInformation.Instance.playerInformation.maxHealth;
             maxTemperature = GameInformation.Instance.playerInformation.maxHealth;
             speed = GameInformation.Instance.playerInformation.speed;
             jumpSpeed = GameInformation.Instance.playerInformation.jumpSpeed;
             snowballMove = GameInformation.Instance.playerInformation.snowballMove;
-            _pos = _startPosition;
-            modifikator = new List<PowerUp>();
+            #endregion
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (_currentDirection == Direction.Right)
-                spriteBatch.Draw(playerTexture, _pos);
-            else
-                spriteBatch.Draw(playerTexture, _pos, null, Color.White, (float)Math.PI, new Vector2(playerTexture.Width, playerTexture.Height), 1, SpriteEffects.None, 0);
+            sprite.Draw(spriteBatch);
+            //if (_currentDirection == Direction.Right)
+            //spriteBatch.Draw(playerTexture, _pos);
+            //else
+            //    spriteBatch.Draw(playerTexture, _pos, null, Color.White, (float)Math.PI, new Vector2(playerTexture.Width, playerTexture.Height), 1, SpriteEffects.None, 0);
         }
         public void Update(GameTime gTime)
         {
@@ -77,9 +92,9 @@ namespace ScharlieAndSnow
             timer += (float)gTime.ElapsedGameTime.TotalSeconds;
 
             ControllerCheckInput();
-
+            sprite.Position = _pos;
             CheckPowerUps(gTime);
-
+            sprite.Update(gTime);
         }
 
         /*  MapStuff.Instance.map.Walkable(); //position Walkable and CheckSnow
@@ -120,6 +135,7 @@ namespace ScharlieAndSnow
                     //Ist ganz praktisch, den Charakter einen Pixel nach oben zu bewegen, damit er auf jedenfall springen darf.
                     _pos.Y -= 1;
                     _currentState = State.jumping;
+                    sprite.CurrentAnimation = AnimationKey.JumpRight;
                 }
 
                 //Move Left
@@ -133,20 +149,21 @@ namespace ScharlieAndSnow
                 {
                     _mov.X = 1;
                     Flip(Direction.Right);
+                    sprite.CurrentAnimation = AnimationKey.WalkRight;
                 }
                 //Collect Snow
                 if (pressedKeys[i] == PlayerManager.validKeys[_playerId][3])
                 {
                     if (_currentDirection == Direction.Right)
                     {
-                        if (MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y + 8), 4))
+                        if (MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X + textureWidth, _pos.Y + textureHeight + 8), 4))
                         {
                             _points++;
                         }
                     }
                     else
                     {
-                        if (MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X, _pos.Y + playerTexture.Bounds.Size.Y + 8), 4))
+                        if (MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X, _pos.Y + textureHeight + 8), 4))
                         {
                             _points++;
                         }
@@ -156,7 +173,7 @@ namespace ScharlieAndSnow
                     {
                         amountSnowball++;
                         _points -= particleForSnowball;
-                        Console.WriteLine(amountSnowball);
+ 
                     }
 
                 }
@@ -170,10 +187,20 @@ namespace ScharlieAndSnow
                         timer = 0;
                         float snowballDamage = GameInformation.Instance.snowballInformation.damage;
                         int snowballSize = GameInformation.Instance.snowballInformation.size;
+                        /*
                         if (_currentDirection == Direction.Right)
                             MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(playerTexture.Bounds.Size.X + 5,0), 300, snowballSize, snowballMove,snowballDamage);
                         else
                             MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(-5,0), 300, snowballSize, new Vector2(snowballMove.X * -1, snowballMove.Y),snowballDamage);
+                        */
+
+
+                        if (_currentDirection == Direction.Right)
+                            MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(sprite.Bounds.Size.X + 5,0), 300, snowballSize, snowballMove, snowballDamage);
+                        else
+                            MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(-5, 0), 300, snowballSize, new Vector2(snowballMove.X * -1, snowballMove.Y), snowballDamage);
+
+                        sprite.CurrentAnimation = AnimationKey.ThrowRight;
                     }
                 }
             }
@@ -184,6 +211,7 @@ namespace ScharlieAndSnow
             _mov.X *= realSpeed;
 
             CheckCollision(_mov); //Check ob die Bewegung funktioniert
+
         }
 
         public void ApplyPowerUp(PowerUp powerUp)
@@ -210,29 +238,42 @@ namespace ScharlieAndSnow
         {
             //Collision der linken obere Ecke sowie der rechten obere Ecke
             //Collision Check X-Achse
-            if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y - 17))
-            && MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X, _pos.Y + playerTexture.Bounds.Size.Y - 17)))
+            if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X + textureWidth, _pos.Y + textureHeight - 17))
+            && MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X, _pos.Y + textureHeight - 17)))
             {
                 _pos.X += _mov.X;
 
             }
             //Collision Check Y-Achse
-            if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + _mov.Y + playerTexture.Bounds.Size.Y))
-                && MapStuff.Instance.map.Walkable(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + _mov.Y + playerTexture.Bounds.Size.Y)))
+            if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + _mov.Y + textureHeight))
+                && MapStuff.Instance.map.Walkable(new Vector2(_pos.X + textureWidth, _pos.Y + _mov.Y + textureHeight)))
             {
 
                 _pos.Y += _mov.Y;
                 //Wenn ich nach unten fallen DARF, dann befinde ich mich ja in der Luft -> state = state.jumping
                 _currentState = State.jumping;
+                sprite.CurrentAnimation = AnimationKey.JumpRight;
             }
             else
             {
                 _currentState = State.grounded;
                 _mov.Y = 0;
             }
-            while (!MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + playerTexture.Bounds.Size.Y))
-            || !MapStuff.Instance.map.Walkable(new Vector2(_pos.X + playerTexture.Bounds.Size.X, _pos.Y + playerTexture.Bounds.Size.Y)))
+            while (!MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + textureHeight))
+            || !MapStuff.Instance.map.Walkable(new Vector2(_pos.X + textureWidth, _pos.Y + textureHeight)))
                 _pos.Y = _pos.Y - 1;
+
+            if(_mov != Vector2.Zero)
+            {
+                sprite.IsAnimating = true;
+
+            }
+            else
+            {
+                sprite.ResetAnimation();
+                sprite.IsAnimating = false;
+            }
+            
         }
 
         /// <summary>

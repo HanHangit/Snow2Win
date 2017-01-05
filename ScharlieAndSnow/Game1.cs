@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using ScharlieAndSnow.Tools;
+using System.Collections.Generic;
 
 namespace ScharlieAndSnow
 {
@@ -14,12 +16,19 @@ namespace ScharlieAndSnow
         RasterizerState rasterizerState;
         IGameState state;
         EGameState prev = EGameState.None, curr = EGameState.Mainmenu;
+        Dictionary<AnimationKey, Animation> playerAnimation = new Dictionary<AnimationKey, Animation>();
+
+        public Dictionary<AnimationKey, Animation> PlayerAnimations
+        {
+            get { return playerAnimation; }
+        }
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             MyContentManager myContentManager = new MyContentManager(Content);
             Content.RootDirectory = "Content";
+            Constant.Gameref = this;
         }
 
         /// <summary>
@@ -40,6 +49,34 @@ namespace ScharlieAndSnow
             graphics.PreferMultiSampling = true;
 
             rasterizerState = new RasterizerState { MultiSampleAntiAlias = true };
+            /*
+            Animation animation = new Animation(8, 32, 32, 0, 0);
+            playerAnimation.Add(AnimationKey.ThrowRight, animation);
+
+             animation = new Animation(8, 32, 32, 0, 0);
+            playerAnimation.Add(AnimationKey.WalkRight, animation);
+
+            animation = new Animation(8, 32, 32, 0, 0);
+            playerAnimation.Add(AnimationKey.JumpRight, animation);
+
+            animation = new Animation(8, 32, 32, 0, 0);
+            playerAnimation.Add(AnimationKey.IdleRight, animation);
+
+            */
+
+            Animation animation = new Animation(5,96,96,0,0);
+            playerAnimation.Add(AnimationKey.ThrowRight, animation);
+
+            animation = new Animation(5, 96, 96, 384, 0);
+            playerAnimation.Add(AnimationKey.JumpRight, animation);
+            
+            
+            animation = new Animation(3, 96, 96, 1632, 0);
+            playerAnimation.Add(AnimationKey.IdleRight, animation);
+            
+            animation = new Animation(10, 96, 96,  2208, 0);
+            playerAnimation.Add(AnimationKey.WalkRight, animation);
+
 
             //graphics.ToggleFullScreen();
 
