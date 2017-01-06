@@ -52,7 +52,7 @@ namespace ScharlieAndSnow
         public Player(int _id, Vector2 _startPosition, Texture2D _playerTexture, int _textureWidth, int _textureHeight)
         {
 
-            amountSnowball = 0;
+            amountSnowball = 100;
             _currentState = State.Start;
             _currentDirection = Direction.Right;
             playerTexture = _playerTexture;

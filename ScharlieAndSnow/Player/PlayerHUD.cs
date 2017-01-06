@@ -29,19 +29,17 @@ namespace ScharlieAndSnow
             currentTemperatur = maxtemperatur;
             playerId = id;
 
-            rectanglePlayer = new Rectangle((int)GameInformation.Instance.mapInformation.PositionHUD[playerId].X,(int) GameInformation.Instance.mapInformation.PositionHUD[playerId].Y,
-                                playerBackground.Width, playerBackground.Height);
-            rectangleSnow = new Rectangle((int)GameInformation.Instance.mapInformation.PositionHUD[playerId].X, (int)GameInformation.Instance.mapInformation.PositionHUD[playerId].Y,
-                                snowballBackGround.Width, snowballBackGround.Height);
-
             playerBackground = MyContentManager.GetTexture(MyContentManager.TextureName.HUDBackPlayer);
             playerFront = MyContentManager.GetTexture(MyContentManager.TextureName.HUDFrontPlayer);
 
             snowballBackGround = MyContentManager.GetTexture(MyContentManager.TextureName.HUDSnowBack);
             snowBallFront = MyContentManager.GetTexture(MyContentManager.TextureName.HUDSnowFront);
-            
-            
-            
+
+            rectanglePlayer = new Rectangle((int)GameInformation.Instance.mapInformation.PositionHUD[playerId].X, (int)GameInformation.Instance.mapInformation.PositionHUD[playerId].Y,
+                                playerBackground.Width, playerBackground.Height);
+            rectangleSnow = new Rectangle((int)GameInformation.Instance.mapInformation.PositionHUD[playerId].X, (int)GameInformation.Instance.mapInformation.PositionHUD[playerId].Y,
+                                snowballBackGround.Width, snowballBackGround.Height);
+
 
 
         }

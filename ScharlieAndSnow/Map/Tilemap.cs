@@ -327,29 +327,6 @@ namespace ScharlieAndSnow
 
             return true;
         }
-
-        /// <summary>
-        /// Fügt den Partikel zur SchneeMap hinzu.
-        /// Er liegt dann auf dem Boden.
-        /// Wenn Masse >5, dann zersplittert der Partikel in weitere Partikel.
-        /// </summary>
-        /// <param name="p"></param>
-        public void AddSnow(Particle p)
-        {
-            p.alive = false;
-
-            if (!CheckPosition(p))
-                return;
-
-            AddParticle(p);
-
-            int numberOfSnow = (int)p.mass;
-
-            Point offsetPoint = new Point(10, 10);
-
-            Particle.SplitUpParticle(p, new Rectangle(p.position.ToPoint() - offsetPoint, (offsetPoint.ToVector2() * 2).ToPoint()));
-        }
-
         public void AddParticle(Particle p )
         {
             p.radius = 4;
@@ -370,6 +347,32 @@ namespace ScharlieAndSnow
             }
         }
 
+
+        /// <summary>
+        /// Fügt den Partikel zur SchneeMap hinzu.
+        /// Er liegt dann auf dem Boden.
+        /// Wenn Masse >5, dann zersplittert der Partikel in weitere Partikel.
+        /// Map-COllision
+        /// </summary>
+        /// <param name="p"></param>
+        public void AddSnow(Particle p)
+        {
+            p.alive = false;
+
+            if (!CheckPosition(p))
+                return;
+
+
+            Particle.SplitUpParticle(p);
+
+            AddParticle(p);
+
+            int numberOfSnow = (int)p.mass;
+
+            Point offsetPoint = new Point(10, 10);
+        }
+
+
         public void AddSnow(Particle p, Vector2 position)
         {
             p.alive = false;
@@ -382,6 +385,20 @@ namespace ScharlieAndSnow
             int numberOfSnow = (int)p.mass;
 
             Particle.SplitUpParticle(p, new Rectangle(position.ToPoint(), new Point(1, 1)));
+        }
+
+        public void AddSnow(Particle p, Vector2 position, Rectangle collisionObject)
+        {
+            p.alive = false;
+
+            if (!CheckPosition(p))
+                return;
+
+            AddParticle(p);
+
+            int numberOfSnow = (int)p.mass;
+
+            Particle.SplitUpParticle(p, collisionObject);
         }
 
         public void Update(GameTime gameTime)

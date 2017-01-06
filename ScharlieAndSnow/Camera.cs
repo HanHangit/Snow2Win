@@ -29,8 +29,7 @@ namespace ScharlieAndSnow
         {
             get
             {
-                return Rectangle.Empty;
-                //return new Rectangle(position.ToPoint(), (view.Size.ToVector2() * new Vector2(lastScale.X,lastScale.Y)).ToPoint());
+                return new Rectangle(position.ToPoint(), (view.Size.ToVector2() * new Vector2(scale.X,scale.Y)).ToPoint());
             }
         }
 

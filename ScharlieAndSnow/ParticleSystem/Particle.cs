@@ -210,24 +210,57 @@ namespace ScharlieAndSnow
                 }
                 */
 
-                MapStuff.Instance.partCollHandler.AddParticle(p.position, 1, 6, move, false, false);
+                MapStuff.Instance.partCollHandler.AddParticle(p.position + 3 * move, 1, 6, move, false, false);
             }
         }
+
+
         public static void SplitUpParticle(Particle p)
         {
-            p.radius = 1;
+            p.alive = false;
+            Vector2 lastPartPos = p.position + p.force;
+
+            Vector2 move = p.force;
+
+            Vector2 reflect = Vector2.Zero;
+
+            while (reflect.X == 0 && reflect.Y == 0)
+            {
+                lastPartPos.X -= p.force.X;
+                if (!MapStuff.Instance.map.Walkable(lastPartPos))
+                    reflect.X = -1 * Math.Sign(p.force.X);
+
+                lastPartPos.Y -= p.force.Y;
+                if (!MapStuff.Instance.map.Walkable(lastPartPos))
+                    reflect.Y = -1 * Math.Sign(p.force.Y);
+            }
 
             int numberOfSnow = (int)p.mass;
 
             if (numberOfSnow <= 5)
                 return;
 
+            p.mass = 1;
+
             for (int i = 0; i < numberOfSnow; ++i)
             {
-                Vector2 move = new Vector2(0, -1);
+                move = Vector2.Reflect(move, Vector2.Normalize(reflect));
                 move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-30, 30)));
-                move *= MapStuff.Instance.rnd.Next(100, 1000) / 100f;
-                MapStuff.Instance.partCollHandler.AddParticle(p.position + new Vector2(0, -10), 1, 3, move, false, false);
+
+                Rectangle particleRect = new Rectangle(p.position.ToPoint(), new Point(2, 2));
+
+                move = Vector2.Normalize(move);
+                move *= MapStuff.Instance.rnd.Next(100, 300) / 100f;
+
+                /*
+                while (particleRect.Intersects(collisionObject))
+                {
+                    p.position += move;
+                    particleRect = new Rectangle(p.position.ToPoint(), new Point(2, 2));
+                }
+                */
+
+                MapStuff.Instance.partCollHandler.AddParticle(p.position + 3 * move, 1, 6, move, false, false);
             }
         }
 
