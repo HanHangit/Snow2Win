@@ -28,6 +28,7 @@ namespace ScharlieAndSnow
         {
             return (maxValue / 100) * Value;
         }
+
         /// <summary>
         /// Berechnet Prozentuelen Wert von X oder Y
         /// </summary>
