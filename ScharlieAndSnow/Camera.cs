@@ -17,7 +17,7 @@ namespace ScharlieAndSnow
 
         public Vector2 position;
         Vector3 lastPos;
-        public Vector3 scale, lastScale;
+        public Vector3 endScale, scale;
         public Vector2 origin;
 
         public Rectangle view;
@@ -37,7 +37,7 @@ namespace ScharlieAndSnow
         public Camera(Viewport _viewport)
         {
             speed = GameInformation.Instance.cameraInformation.speed;
-            scale = Vector3.One;
+            endScale = Vector3.One;
             viewport = _viewport;
             position = Vector2.Zero;
             lastPos = Vector3.One;
@@ -50,7 +50,7 @@ namespace ScharlieAndSnow
         public void Reset()
         {
             position = Vector2.Zero;
-            scale = Vector3.One;
+            endScale = Vector3.One;
             origin = new Vector2(viewport.Width / 2f, viewport.Height / 2f);
         }
 
@@ -104,7 +104,7 @@ namespace ScharlieAndSnow
 
                 maxPosY = help;
 
-                scale = new Vector3(Math.Min(Math.Min(viewport.Width / (maxPosX - minPosX + 2*offsetX),(viewport.Height / (maxPosY - minPosY + 2*offsetY))),1),
+                endScale = new Vector3(Math.Min(Math.Min(viewport.Width / (maxPosX - minPosX + 2*offsetX),(viewport.Height / (maxPosY - minPosY + 2*offsetY))),1),
                     Math.Min(Math.Min(viewport.Width / (maxPosX - minPosX + 2 * offsetX), viewport.Height / (maxPosY - minPosY + 2 * offsetY)),1),
                      1);
             }
@@ -113,12 +113,12 @@ namespace ScharlieAndSnow
             position = new Vector2(minPosX - offsetX, minPosY - offsetY);
 
             Vector3 newPos = Vector3.Lerp( lastPos, new Vector3(position, 1), speed);
-            Vector3 newScale = Vector3.Lerp(lastScale, scale,  speed);
+            Vector3 newScale = Vector3.Lerp(scale, endScale,  speed);
 
             position = new Vector2((int)newPos.X,(int)newPos.Y);
 
             lastPos = newPos;
-            lastScale = newScale;
+            scale = newScale;
 
             return
                 Matrix.CreateTranslation(new Vector3(-(int)newPos.X,-(int)newPos.Y,1))
