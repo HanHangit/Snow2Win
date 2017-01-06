@@ -49,21 +49,23 @@ namespace ScharlieAndSnow
             graphics.PreferMultiSampling = true;
 
             rasterizerState = new RasterizerState { MultiSampleAntiAlias = true };
-            /*
-            Animation animation = new Animation(8, 32, 32, 0, 0);
+            
+
+
+            Animation animation = new Animation(1, 16, 32, 0, 0);
             playerAnimation.Add(AnimationKey.ThrowRight, animation);
 
-             animation = new Animation(8, 32, 32, 0, 0);
+             animation = new Animation(1, 16, 32, 0, 0);
             playerAnimation.Add(AnimationKey.WalkRight, animation);
 
-            animation = new Animation(8, 32, 32, 0, 0);
+            animation = new Animation(1, 16, 32, 0, 0);
             playerAnimation.Add(AnimationKey.JumpRight, animation);
 
-            animation = new Animation(8, 32, 32, 0, 0);
+            animation = new Animation(1, 16, 32, 0, 0);
             playerAnimation.Add(AnimationKey.IdleRight, animation);
 
-            */
-
+            
+            /*
             Animation animation = new Animation(5,96,96,0,0);
             playerAnimation.Add(AnimationKey.ThrowRight, animation);
 
@@ -76,7 +78,7 @@ namespace ScharlieAndSnow
             
             animation = new Animation(10, 96, 96,  2208, 0);
             playerAnimation.Add(AnimationKey.WalkRight, animation);
-
+            */
 
             //graphics.ToggleFullScreen();
 
@@ -103,7 +105,7 @@ namespace ScharlieAndSnow
 
             MapStuff.Instance.partCollHandler = new GlobalParticleHandler();
 
-            MapStuff.Instance.map.CreateDebugSnow();
+            //MapStuff.Instance.map.CreateDebugSnow();
 
             //Initialize Camera
             GUIStuff.Instance.camera = new Camera(graphics.GraphicsDevice.Viewport);
@@ -151,7 +153,7 @@ namespace ScharlieAndSnow
         {
 
 
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.RosyBrown);
             
             GraphicsDevice.SetRenderTarget(null);
 

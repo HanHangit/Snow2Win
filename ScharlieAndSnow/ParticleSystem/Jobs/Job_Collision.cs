@@ -49,20 +49,14 @@ namespace ScharlieAndSnow
             if (MapStuff.Instance.map.Walkable(p.position + p.force))
                 return;
 
-            while (MapStuff.Instance.map.Walkable(p.position))
-            {
-                while(MapStuff.Instance.map.Walkable(p.position))
-                    p.position.Y += 1f;
+            p.radius = 1;
 
-                if (MapStuff.Instance.map.Walkable(p.position - new Vector2(1, 0)))
-                    p.position.X -= 1;
-                else if (MapStuff.Instance.map.Walkable(p.position + new Vector2(1, 0)))
-                    p.position.X += 1;
-            }
+            while (MapStuff.Instance.map.Walkable(new Vector2(p.position.X, p.position.Y + 1)))
+                p.position.Y += 1;
 
-            p.position.Y -= 1f;
-            MapStuff.Instance.map.AddSnow(p);
-            
+
+
+            MapStuff.Instance.map.AddSnow(p);        
 
         }
 
@@ -76,7 +70,7 @@ namespace ScharlieAndSnow
             {
                 Rectangle player = ply.Bounds;
                 Rectangle particle = p.destRectangle;
-                particle.Location = (particle.Location.ToVector2() + 2*p.force).ToPoint();
+                particle.Location = (particle.Location.ToVector2()).ToPoint();
                 //Bounds vom Player added
                 if(player.Intersects(particle))
                 {

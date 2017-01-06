@@ -27,7 +27,7 @@ namespace ScharlieAndSnow
         {
             get
             {
-                return new Rectangle(_pos.ToPoint().X, _pos.ToPoint().Y, textureWidth, textureHeight);
+                return sprite.Bounds;
             }
         }
 
@@ -196,9 +196,9 @@ namespace ScharlieAndSnow
 
 
                         if (_currentDirection == Direction.Right)
-                            MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(sprite.Bounds.Size.X + 5,0), 300, snowballSize, snowballMove, snowballDamage);
+                            MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(sprite.Bounds.Size.X + 10,0), 30, snowballSize, snowballMove, snowballDamage);
                         else
-                            MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(-5, 0), 300, snowballSize, new Vector2(snowballMove.X * -1, snowballMove.Y), snowballDamage);
+                            MapStuff.Instance.partCollHandler.AddParticle(_pos + new Vector2(-5, 0), 30, snowballSize, new Vector2(snowballMove.X * -1, snowballMove.Y), snowballDamage);
 
                         sprite.CurrentAnimation = AnimationKey.ThrowRight;
                     }

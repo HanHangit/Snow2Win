@@ -47,7 +47,7 @@ namespace ScharlieAndSnow
             textureDictionary.Add(TextureName.SnowTile, Content.Load<Texture2D>("SnowTile"));
             textureDictionary.Add(TextureName.SnowTile_down, Content.Load<Texture2D>("MapTiles/SnowTile_down"));
             textureDictionary.Add(TextureName.SnowTile_up, Content.Load<Texture2D>("MapTiles/SnowTile_Up"));
-            textureDictionary.Add(TextureName.Map02, Content.Load<Texture2D>("Map03"));
+            textureDictionary.Add(TextureName.Map02, Content.Load<Texture2D>("Map04"));
             textureDictionary.Add(TextureName.Clouds, Content.Load<Texture2D>("Clouds"));
             textureDictionary.Add(TextureName.SnowBall, Content.Load<Texture2D>("Schneeball"));
             textureDictionary.Add(TextureName.Player1, Content.Load<Texture2D>("Player1"));
@@ -56,7 +56,7 @@ namespace ScharlieAndSnow
             textureDictionary.Add(TextureName.ExitButton, Content.Load<Texture2D>("ExitButton"));
             textureDictionary.Add(TextureName.BackGround_1270x720, Content.Load<Texture2D>("BackGround_1270x720"));
             textureDictionary.Add(TextureName.littleBird, Content.Load<Texture2D>("SnowBird"));
-            textureDictionary.Add(TextureName.mage, Content.Load<Texture2D>("Mage"));
+            textureDictionary.Add(TextureName.mage, Content.Load<Texture2D>("Player1"));
 
         }
         static void LoadFont()

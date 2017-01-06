@@ -34,13 +34,15 @@ namespace ScharlieAndSnow
 
         CloudSpawner cloudSpawner;
 
+        public List<Tile> powerUpTiles;
+        public List<Tile> cloudTiles;
+
 
 
         public Tilemap(int _tileSize)
         {
-
-            powerUpSpawner = new PowerUpSpawner();
-            cloudSpawner = new CloudSpawner();
+            powerUpTiles = new List<Tile>();
+            cloudTiles = new List<Tile>();
             //Initialize Map
             tileTexture = new[]{ MyContentManager.GetTexture(MyContentManager.TextureName.SkyTile), MyContentManager.GetTexture(MyContentManager.TextureName.SnowTile),
                                     MyContentManager.GetTexture(MyContentManager.TextureName.SnowTile_down),MyContentManager.GetTexture(MyContentManager.TextureName.SnowTile_up)};
@@ -62,6 +64,10 @@ namespace ScharlieAndSnow
             rendTarget = new RenderTarget2D(GraphicStuff.Instance.graphicDevice, realSize.X, realSize.Y);
 
             BuildMap(tileTexture, bitMap);
+
+
+            powerUpSpawner = new PowerUpSpawner(powerUpTiles);
+            cloudSpawner = new CloudSpawner(cloudTiles);
         }
 
         private void BuildMap(Texture2D[] textures, Texture2D bitMap)
@@ -108,19 +114,27 @@ namespace ScharlieAndSnow
                     if (colores[y * tileMap.GetLength(0) + x] == Color.White)
                     {
                         //Sky
-                        tileMap[x, y] = new Tile(textures[0], new Vector2(x * tileSize, y * tileSize), 0);
+                        tileMap[x, y] = new Tile(textures[0], new Vector2(x * tileSize, y * tileSize), ETile.Sky);
                         snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[0], 0, tileSize * tileSize);
                     }
                     else if (colores[y * tileMap.GetLength(0) + x] == new Color(237,28,36))
                     {
-                        tileMap[x, y] = new Tile(textures[0], new Vector2(x * tileSize, y * tileSize), 0);
+                        //PowerUpSpawnTile
+                        tileMap[x, y] = new Tile(textures[0], new Vector2(x * tileSize, y * tileSize), ETile.PowerUp);
                         snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[0], 0, tileSize * tileSize);
-                        powerUpSpawner.AddTile(tileMap[x, y]);
+                        powerUpTiles.Add(tileMap[x, y]);
+                    }
+                    else if (colores[y * tileMap.GetLength(0) + x] == new Color(0, 162, 232))
+                    {
+                        //CloudSpawnTile
+                        tileMap[x, y] = new Tile(textures[0], new Vector2(x * tileSize, y * tileSize), ETile.Cloud);
+                        snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[0], 0, tileSize * tileSize);
+                        cloudTiles.Add(tileMap[x, y]);
                     }
                     else
                     {
                         //Stone
-                        tileMap[x, y] = new Tile(textures[1], new Vector2(x * tileSize, y * tileSize), 1);
+                        tileMap[x, y] = new Tile(textures[1], new Vector2(x * tileSize, y * tileSize), ETile.Terrain);
                         snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[1], 0, tileSize * tileSize);
                     }
 
@@ -147,7 +161,7 @@ namespace ScharlieAndSnow
                         });
                         //Console.WriteLine("Position: " + new Vector2(x * tileSize, y * tileSize));
                         //Console.WriteLine(triangle.ToString());
-                        tileMap[x, y] = new Tile(textures[2], new Vector2(x * tileSize, y * tileSize), 0, triangle);
+                        tileMap[x, y] = new Tile(textures[2], new Vector2(x * tileSize, y * tileSize), triangle, ETile.Triangle);
                         snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[2], 0, tileSize * tileSize);
                     }
 
@@ -163,7 +177,7 @@ namespace ScharlieAndSnow
                         });
                         //Console.WriteLine("Position: " + new Vector2(x * tileSize, y * tileSize));
                         //Console.WriteLine(triangle.ToString());
-                        tileMap[x, y] = new Tile(textures[3], new Vector2(x * tileSize, y * tileSize), 0, triangle);
+                        tileMap[x, y] = new Tile(textures[3], new Vector2(x * tileSize, y * tileSize), triangle, ETile.Triangle);
                         snowTexture.SetData(0, new Rectangle(x * tileSize, y * tileSize, tileSize, tileSize), tileColor[3], 0, tileSize * tileSize);
                     }
                 }
@@ -343,6 +357,25 @@ namespace ScharlieAndSnow
             Particle.SplitUpParticle(p,new Rectangle(position.ToPoint(),new Point(1,1)));
         }
 
+        public void AddParticle(Particle p )
+        {
+            particles.Add(p);
+        }
+
+        public void AddSnowToMap(Particle p, Vector2 position)
+        {
+
+            try
+            {
+                snowTiles[(int)position.X, (int)position.Y] = p;
+                rendTarget.SetData(0, new Rectangle((int)position.X, (int)position.Y, 2, 2), new[] { p.color, p.color, p.color, p.color }, 0, 1);
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Console.WriteLine(position);
+            }
+        }
+
         public void AddSnow(Particle p, Vector2 position)
         {
             p.alive = false;
@@ -350,19 +383,9 @@ namespace ScharlieAndSnow
             if (!CheckPosition(p))
                 return;
 
+            AddParticle(p);
 
             int numberOfSnow = (int)p.mass;
-
-            try
-            {
-                snowTiles[(int)position.X, (int)position.Y] = p;
-                particles.Add(p);
-                rendTarget.SetData(0, new Rectangle((int)position.X, (int)position.Y, 2, 2), new[] { p.color, p.color, p.color, p.color }, 0, 1);
-            }
-            catch (IndexOutOfRangeException)
-            {
-                Console.WriteLine(position);
-            }
 
             Particle.SplitUpParticle(p, new Rectangle(position.ToPoint(), new Point(1, 1)));
         }
@@ -373,7 +396,19 @@ namespace ScharlieAndSnow
             powerUpSpawner.Update(gameTime);
             cloudSpawner.Update(gameTime);
 
-            
+
+            for(int i = 0; i < particles.Count; ++i)
+            {
+                if (!particles[i].snow)
+                    particles[i].UpdateSnow();
+                else
+                {
+                    AddSnowToMap(particles[i], particles[i].position);
+                    particles.RemoveAt(i--);
+                }
+            }
+
+
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -401,13 +436,13 @@ namespace ScharlieAndSnow
             cloudSpawner.Draw(spriteBatch);
             powerUpSpawner.Draw(spriteBatch);
 
-            /*
+            
             foreach (Particle p in particles)
             {
                 if (p != null)
                     p.Draw(spriteBatch);
             }
-            */
+            
 
 
         }

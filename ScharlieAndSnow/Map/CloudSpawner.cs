@@ -12,20 +12,23 @@ namespace ScharlieAndSnow
     {
 
         public List<Clouds> cloudList = new List<Clouds>();
+        public List<Tile> spawnTiles;
         float timer;
         float maxTimer;
         int maxClouds;
 
-        public CloudSpawner()
+        public CloudSpawner(List<Tile> _cloudTiles)
         {
+            spawnTiles = _cloudTiles;
             timer = 0;
             maxTimer = GameInformation.Instance.mapInformation.cloudSpawnTime;
             maxClouds = GameInformation.Instance.mapInformation.maxAmountClouds;
             Texture2D text = MyContentManager.GetTexture(MyContentManager.TextureName.Clouds);
-            cloudList.Add(new Clouds(text, new Vector2(100, 50), new Vector2(1f, 0), 1, 0.1f, 300, 10, 6));
-            cloudList.Add(new Clouds(text, new Vector2(500, 40), new Vector2(1f, 0), 1, 0.01f, 20, 7, 6));
-            cloudList.Add(new Clouds(text, new Vector2(400, 20), new Vector2(4f, 0), 1, 0.2f, 50, 6, 6));
-            cloudList.Add(new Clouds(text, new Vector2(700, 80), new Vector2(2f, 0), 1, 0.07f, 180, 13, 6));
+            for (int i = 0; i < maxClouds; ++i)
+            {
+                Vector2 spawnPosition = spawnTiles[MapStuff.Instance.rnd.Next(0, spawnTiles.Count)].position;
+                cloudList.Add(new Clouds(text, spawnPosition, new Vector2(1f, 0), 1, 0.1f, 300, 9, 6));
+            }
         }
 
         public void Update(GameTime gTime)

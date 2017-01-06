@@ -10,21 +10,17 @@ namespace ScharlieAndSnow
 {
     class PowerUpSpawner
     {
-        List<Tile> spawnTiles = new List<Tile>();
+        List<Tile> spawnTiles;
         List<PowerUp> powerUpList = new List<PowerUp>();
         List<Tile> powerUpTiles = new List<Tile>();
         float timer;
         float maxTimer;
 
-        public PowerUpSpawner()
+        public PowerUpSpawner(List<Tile> _powerUpTiles)
         {
+            spawnTiles = _powerUpTiles;
             timer = 0;
             maxTimer = GameInformation.Instance.mapInformation.powerUpTimer;
-        }
-
-        public void AddTile(Tile t)
-        {
-            spawnTiles.Add(t);
         }
 
         public void Update(GameTime gTime)

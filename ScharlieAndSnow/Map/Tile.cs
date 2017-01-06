@@ -9,29 +9,37 @@ using Microsoft.Xna.Framework.Input;
 
 namespace ScharlieAndSnow
 {
+    enum ETile
+    {
+        Sky,
+        Terrain,
+        PowerUp,
+        Cloud,
+        Triangle
+    }
     class Tile
     {
         public Vector2 position;
         public Texture2D texture;
-        int id;
         Triangle triangle;
         public bool hasPowerUp;
+        public ETile type;
 
-        public Tile(Texture2D _texture, Vector2 _position, int _id)
+        public Tile(Texture2D _texture, Vector2 _position, ETile _type)
         {
             hasPowerUp = false;
             texture = _texture;
             position = _position;
-            id = _id;
-
+            type = _type;
         }
 
-        public Tile(Texture2D _texture, Vector2 _position, int _id, Triangle _triangle)
+        public Tile(Texture2D _texture, Vector2 _position, Triangle _triangle, ETile _type)
         {
+            hasPowerUp = false;
             texture = _texture;
             position = _position;
-            id = _id;
             triangle = _triangle;
+            type = _type;
         }
 
         public void Update(GameTime gameTime)
@@ -42,13 +50,13 @@ namespace ScharlieAndSnow
         //Für die Initalisierung der Map vonnöten.
         public bool Walkable()
         {
-            return id == 0;
+            return type != ETile.Terrain;
         }
 
         public bool Walkable(Vector2 position)
         {
             if (triangle == null)
-                return (id == 0);
+                return Walkable();
             else
             {
                 //Console.WriteLine("Triangle Intersect " + position);

@@ -24,6 +24,8 @@ namespace ScharlieAndSnow
 
         public static Texture2D particleText;
 
+        public bool snow = false;
+
         static float drag;
 
         static Vector2 gravity;
@@ -113,6 +115,31 @@ namespace ScharlieAndSnow
             force = _velocity;
         }
 
+        public void UpdateSnow()
+        {
+            int speed = 1;
+
+            if(!MapStuff.Instance.map.Walkable(position + new Vector2(0,1)))
+            {
+                if (MapStuff.Instance.map.Walkable(position + new Vector2(1, 1)))
+                    position += new Vector2(1, 1);
+                else if (MapStuff.Instance.map.Walkable(position + new Vector2(-1, 1)))
+                    position += new Vector2(-1, 1);
+                else
+                    snow = true;
+            }
+            else
+            {
+                if (MapStuff.Instance.map.Walkable(position + new Vector2(0, speed)))
+                    position += new Vector2(0, speed);
+                else
+                {
+                    while (MapStuff.Instance.map.Walkable(position + new Vector2(0, 1)))
+                        position += new Vector2(0, 1);
+                }
+            }
+        }
+
         public void Update(GameTime gTime)
         {
             force += gravity;
@@ -167,7 +194,8 @@ namespace ScharlieAndSnow
                 Rectangle particleRect = new Rectangle(p.position.ToPoint(), new Point(2, 2));
 
                 move = Vector2.Normalize(move);
-                move *= MapStuff.Instance.rnd.Next(100, 1000) / 100f;
+                move *= MapStuff.Instance.rnd.Next(100, 300) / 100f;
+
                 /*
                 while (particleRect.Intersects(collisionObject))
                 {
