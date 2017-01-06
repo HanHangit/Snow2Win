@@ -308,7 +308,7 @@ namespace ScharlieAndSnow
             return true;
         }
 
-        bool CheckPosition(Vector2 p)
+        public bool CheckPosition(Vector2 p)
         {
             if (float.IsNaN(p.X) || float.IsNaN(p.Y)
     || p.X >= snowTiles.GetLength(0) || p.Y >= snowTiles.GetLength(1)
@@ -318,7 +318,7 @@ namespace ScharlieAndSnow
             return true;
         }
 
-        bool CheckPosition(Particle p)
+        public bool CheckPosition(Particle p)
         {
             if (float.IsNaN(p.position.X) || float.IsNaN(p.position.Y)
     || p.position.X >= snowTiles.GetLength(0) || p.position.Y >= snowTiles.GetLength(1)

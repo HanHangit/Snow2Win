@@ -29,14 +29,13 @@ namespace ScharlieAndSnow
         {
             get
             {
-                return new Rectangle(position.ToPoint(), (view.Size.ToVector2() * new Vector2(lastScale.X,lastScale.Y)).ToPoint());
+                return Rectangle.Empty;
+                //return new Rectangle(position.ToPoint(), (view.Size.ToVector2() * new Vector2(lastScale.X,lastScale.Y)).ToPoint());
             }
         }
 
         public Camera(Viewport _viewport)
         {
-
-
             speed = GameInformation.Instance.cameraInformation.speed;
             scale = Vector3.One;
             viewport = _viewport;

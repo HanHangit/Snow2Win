@@ -158,11 +158,20 @@ namespace ScharlieAndSnow
 
         public static void SplitUpParticle(Particle p, Rectangle collisionObject)
         {
+            p.alive = false;
             Vector2 lastPartPos = p.position;
 
             Vector2 move = p.force;
 
-            while (!MapStuff.Instance.map.Walkable(p.position))
+            int k = 100;
+
+            while (!MapStuff.Instance.map.Walkable(p.position) && k > 0)
+            {
+                if (!MapStuff.Instance.map.CheckPosition(p))
+                    return;
+                --k;
+                p.position.Y -= 1;
+            }
 
             
             while (move.X == p.force.X && move.Y == p.force.Y && !(move.X == 0 && move.Y == 0))
@@ -183,7 +192,6 @@ namespace ScharlieAndSnow
                 return;
 
             p.mass = 1;
-            p.alive = false;
 
             for (int i = 0; i < numberOfSnow; ++i)
             {
