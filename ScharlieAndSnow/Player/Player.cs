@@ -19,7 +19,7 @@ namespace ScharlieAndSnow
     class Player
     {
         public Vector2 _pos;
-        public float temperature { get; private set; }
+        public float currentTemperatur { get; private set; }
         float maxTemperature;
         public bool isAlive { get; private set; }
 
@@ -45,6 +45,7 @@ namespace ScharlieAndSnow
         List<PowerUp> modifikator;
         AnimatedSprite sprite;
         int  textureWidth, textureHeight;
+        PlayerHUD playerHUD;
 
 
 
@@ -65,11 +66,12 @@ namespace ScharlieAndSnow
             //Animation
             this.sprite = new AnimatedSprite(playerTexture, Constant.Gameref.PlayerAnimations);
             this.sprite.CurrentAnimation = AnimationKey.WalkRight;
+            playerHUD = new PlayerHUD(_playerId);
             #region GameInformationValues
             particleForSnowball = GameInformation.Instance.playerInformation.particleForSnowball;
             attackSpeed = GameInformation.Instance.playerInformation.attackSpeed;
 
-            temperature = GameInformation.Instance.playerInformation.maxHealth;
+            currentTemperatur = GameInformation.Instance.playerInformation.maxHealth;
             maxTemperature = GameInformation.Instance.playerInformation.maxHealth;
             speed = GameInformation.Instance.playerInformation.speed;
             jumpSpeed = GameInformation.Instance.playerInformation.jumpSpeed;
@@ -80,6 +82,7 @@ namespace ScharlieAndSnow
         public void Draw(SpriteBatch spriteBatch)
         {
             sprite.Draw(spriteBatch);
+            playerHUD.Draw(spriteBatch);
             //if (_currentDirection == Direction.Right)
             //spriteBatch.Draw(playerTexture, _pos);
             //else
@@ -88,7 +91,7 @@ namespace ScharlieAndSnow
         public void Update(GameTime gTime)
         {
             if (!isAlive) return;
-
+            playerHUD.Update(gTime, currentTemperatur);
             timer += (float)gTime.ElapsedGameTime.TotalSeconds;
 
             ControllerCheckInput();
@@ -287,10 +290,9 @@ namespace ScharlieAndSnow
             foreach (PowerUp p in modifikator)
                 realDamage -= realDamage * (p.mode.armor / 100f);
 
-            Console.WriteLine("Damage To Player" + realDamage);
 
-            temperature -= realDamage;
-            if (temperature <= 0)
+            currentTemperatur -= realDamage;
+            if (currentTemperatur <= 0)
             {
                 isAlive = false;
             }
@@ -305,9 +307,9 @@ namespace ScharlieAndSnow
         public void ToWarumUp(int value)
         {
             Console.WriteLine("HealthUp " + value);
-            temperature += value;
-            if (temperature > maxTemperature)
-                temperature = maxTemperature;
+            currentTemperatur += value;
+            if (currentTemperatur > maxTemperature)
+                currentTemperatur = maxTemperature;
         }
     }
 }
