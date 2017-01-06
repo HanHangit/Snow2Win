@@ -336,29 +336,23 @@ namespace ScharlieAndSnow
         /// <param name="p"></param>
         public void AddSnow(Particle p)
         {
-
-            Vector2 position = p.position;
             p.alive = false;
 
             if (!CheckPosition(p))
                 return;
 
-            try
-            {
-                snowTiles[(int)position.X, (int)position.Y] = p;
-                particles.Add(p);
-                rendTarget.SetData(0, new Rectangle((int)position.X, (int)position.Y, 2, 2), new[] { p.color, p.color, p.color, p.color }, 0, 1);
-            }
-            catch (IndexOutOfRangeException)
-            {
-                Console.WriteLine(p.position);
-            }
+            AddParticle(p);
 
-            Particle.SplitUpParticle(p,new Rectangle(position.ToPoint(),new Point(1,1)));
+            int numberOfSnow = (int)p.mass;
+
+            Point offsetPoint = new Point(10, 10);
+
+            Particle.SplitUpParticle(p, new Rectangle(p.position.ToPoint() - offsetPoint, (offsetPoint.ToVector2() * 2).ToPoint()));
         }
 
         public void AddParticle(Particle p )
         {
+            p.radius = 4;
             particles.Add(p);
         }
 

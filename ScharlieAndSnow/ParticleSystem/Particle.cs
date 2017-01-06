@@ -117,7 +117,7 @@ namespace ScharlieAndSnow
 
         public void UpdateSnow()
         {
-            int speed = 1;
+            int speed = 5;
 
             if(!MapStuff.Instance.map.Walkable(position + new Vector2(0,1)))
             {
@@ -151,7 +151,7 @@ namespace ScharlieAndSnow
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            destRectangle.Location = (position).ToPoint();
+            destRectangle = new Rectangle((int)(position.X - radius/2), (int)(position.Y - radius/2), (int)radius, (int)radius);
 
             spriteBatch.Draw(particleText, destRectangle, Color.White);
         }
@@ -162,6 +162,7 @@ namespace ScharlieAndSnow
 
             Vector2 move = p.force;
 
+            while (!MapStuff.Instance.map.Walkable(p.position))
 
             
             while (move.X == p.force.X && move.Y == p.force.Y && !(move.X == 0 && move.Y == 0))
@@ -175,9 +176,6 @@ namespace ScharlieAndSnow
                     move.Y *= -1;
 
             }
-            
-
-            p.radius = 1;
 
             int numberOfSnow = (int)p.mass;
 
@@ -204,7 +202,7 @@ namespace ScharlieAndSnow
                 }
                 */
 
-                MapStuff.Instance.partCollHandler.AddParticle(p.position, 1, 3, move, false, false);
+                MapStuff.Instance.partCollHandler.AddParticle(p.position, 1, 6, move, false, false);
             }
         }
         public static void SplitUpParticle(Particle p)

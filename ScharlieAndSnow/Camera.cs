@@ -24,6 +24,15 @@ namespace ScharlieAndSnow
 
         public float speed { get; private set; }
 
+
+        public Rectangle Bounds
+        {
+            get
+            {
+                return new Rectangle(position.ToPoint(), (view.Size.ToVector2() * new Vector2(lastScale.X,lastScale.Y)).ToPoint());
+            }
+        }
+
         public Camera(Viewport _viewport)
         {
 

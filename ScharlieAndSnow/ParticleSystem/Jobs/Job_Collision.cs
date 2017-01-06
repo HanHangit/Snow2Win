@@ -48,7 +48,7 @@ namespace ScharlieAndSnow
         {
             if (MapStuff.Instance.map.Walkable(p.position + p.force))
                 return;
-
+            p.alive = false;
             p.radius = 1;
 
             while (MapStuff.Instance.map.Walkable(new Vector2(p.position.X, p.position.Y + 1)))
