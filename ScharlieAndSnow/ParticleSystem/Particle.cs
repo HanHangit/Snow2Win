@@ -119,7 +119,7 @@ namespace ScharlieAndSnow
         {
             int speed = 5;
 
-            if(!MapStuff.Instance.map.Walkable(position + new Vector2(0,1)))
+            if (!MapStuff.Instance.map.Walkable(position + new Vector2(0, 1)))
             {
                 if (MapStuff.Instance.map.Walkable(position + new Vector2(1, 1)))
                     position += new Vector2(1, 1);
@@ -151,7 +151,7 @@ namespace ScharlieAndSnow
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            destRectangle = new Rectangle((int)(position.X - radius/2), (int)(position.Y - radius/2), (int)radius, (int)radius);
+            destRectangle = new Rectangle((int)(position.X - radius / 2), (int)(position.Y - radius / 2), (int)radius, (int)radius);
 
             spriteBatch.Draw(particleText, destRectangle, Color.White);
         }
@@ -173,7 +173,7 @@ namespace ScharlieAndSnow
                 p.position.Y -= 1;
             }
 
-            
+
             while (move.X == p.force.X && move.Y == p.force.Y && !(move.X == 0 && move.Y == 0))
             {
                 lastPartPos -= p.force;
@@ -220,6 +220,9 @@ namespace ScharlieAndSnow
             p.alive = false;
             Vector2 lastPartPos = p.position + p.force;
 
+            while (MapStuff.Instance.map.Walkable(lastPartPos))
+                lastPartPos += p.force;
+
             Vector2 move = p.force;
 
             Vector2 reflect = Vector2.Zero;
@@ -245,7 +248,7 @@ namespace ScharlieAndSnow
             for (int i = 0; i < numberOfSnow; ++i)
             {
                 move = Vector2.Reflect(move, Vector2.Normalize(reflect));
-                move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-30, 30)));
+                move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-10, 10)));
 
                 Rectangle particleRect = new Rectangle(p.position.ToPoint(), new Point(2, 2));
 
@@ -260,7 +263,7 @@ namespace ScharlieAndSnow
                 }
                 */
 
-                MapStuff.Instance.partCollHandler.AddParticle(p.position + 3 * move, 1, 6, move, false, false);
+                MapStuff.Instance.partCollHandler.AddParticle(lastPartPos + move, 1, 6, move, false, false);
             }
         }
 
