@@ -35,7 +35,8 @@ namespace ScharlieAndSnow
         float _points = 0;
         float timer, attackSpeed;
         int _playerId;
-        int amountSnowball;
+        int currentAmountSnowball;
+
         int particleForSnowball;
         Vector2 _mov;
         Vector2 snowballMove;
@@ -52,7 +53,8 @@ namespace ScharlieAndSnow
         public Player(int _id, Vector2 _startPosition, Texture2D _playerTexture, int _textureWidth, int _textureHeight)
         {
 
-            amountSnowball = 100;
+            currentAmountSnowball = 3;
+ 
             _currentState = State.Start;
             _currentDirection = Direction.Right;
             playerTexture = _playerTexture;
@@ -95,7 +97,7 @@ namespace ScharlieAndSnow
         public void Update(GameTime gTime)
         {
             if (!isAlive) return;
-            playerHUD.Update(gTime, currentTemperatur);
+            playerHUD.Update(gTime, currentTemperatur, currentAmountSnowball);
             timer += (float)gTime.ElapsedGameTime.TotalSeconds;
 
             ControllerCheckInput();
@@ -178,7 +180,7 @@ namespace ScharlieAndSnow
 
                     if (_points > particleForSnowball)
                     {
-                        amountSnowball++;
+                        currentAmountSnowball++;
                         _points -= particleForSnowball;
  
                     }
@@ -188,9 +190,9 @@ namespace ScharlieAndSnow
                 //Throw Snowball
                 if (pressedKeys[i] == PlayerManager.validKeys[_playerId][4])
                 {
-                    if (amountSnowball > 0 && timer >= attackSpeed)
+                    if (currentAmountSnowball > 0 && timer >= attackSpeed)
                     {
-                        amountSnowball--;
+                        currentAmountSnowball--;
                         timer = 0;
                         float snowballDamage = GameInformation.Instance.snowballInformation.damage;
                         int snowballSize = GameInformation.Instance.snowballInformation.size;
