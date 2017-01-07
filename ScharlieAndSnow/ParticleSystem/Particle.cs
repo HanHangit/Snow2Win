@@ -248,7 +248,7 @@ namespace ScharlieAndSnow
             for (int i = 0; i < numberOfSnow; ++i)
             {
                 move = Vector2.Reflect(move, Vector2.Normalize(reflect));
-                move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-10, 10)));
+                //move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-10, 10)));
 
                 Rectangle particleRect = new Rectangle(p.position.ToPoint(), new Point(2, 2));
 
@@ -263,7 +263,7 @@ namespace ScharlieAndSnow
                 }
                 */
 
-                MapStuff.Instance.partCollHandler.AddParticle(lastPartPos + move, 1, 6, move, false, false);
+                MapStuff.Instance.partCollHandler.AddParticle(lastPartPos + 10 * move, 1, 6, move, false, false);
             }
         }
 

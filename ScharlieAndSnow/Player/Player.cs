@@ -79,10 +79,14 @@ namespace ScharlieAndSnow
             #endregion
         }
 
+        public void DrawGUI(SpriteBatch spriteBatch)
+        {
+            playerHUD.Draw(spriteBatch);
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             sprite.Draw(spriteBatch);
-            playerHUD.Draw(spriteBatch);
             //if (_currentDirection == Direction.Right)
             //spriteBatch.Draw(playerTexture, _pos);
             //else

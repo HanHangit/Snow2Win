@@ -39,6 +39,12 @@ namespace ScharlieAndSnow
                 PlayerManager.Instance.playerArray[i].Draw(spriteBatch);
         }
 
+        public void DrawGUI(SpriteBatch spriteBatch)
+        {
+            for (int i = 0; i < PlayerManager.Instance.playerArray.Length; i++)
+                PlayerManager.Instance.playerArray[i].DrawGUI(spriteBatch);
+        }
+
         public void Initialize()
         {
             PlayerManager.Instance.playerArray = new Player[2];

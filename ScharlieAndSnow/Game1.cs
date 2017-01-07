@@ -164,6 +164,12 @@ namespace ScharlieAndSnow
             spriteBatch.DrawString(MyContentManager.GetFont(MyContentManager.FontName.Arial), fps.ToString(), GUIStuff.Instance.camera.position, Color.White);
             spriteBatch.End();
 
+            spriteBatch.Begin();
+
+            state.DrawGUI(spriteBatch);
+
+            spriteBatch.End();
+
             base.Draw(gameTime);
         }
         void HandleGameStates()

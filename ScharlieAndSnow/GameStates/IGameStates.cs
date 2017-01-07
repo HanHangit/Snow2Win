@@ -24,6 +24,8 @@ namespace ScharlieAndSnow
         void LoadContent();
         void UnloadContent();
         void Draw(SpriteBatch spriteBatch);
+
+        void DrawGUI(SpriteBatch spriteBatch);
         EGameState Update(GameTime gTime);
 
     }

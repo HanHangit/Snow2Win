@@ -141,5 +141,9 @@ namespace ScharlieAndSnow
             sourceRect = new Rectangle(birdTexture.Width / 10 * frames, 0, 128, 128);
             elapsed += (float)gTime.ElapsedGameTime.TotalMilliseconds;
         }
+
+        public void DrawGUI(SpriteBatch spriteBatch)
+        {
+        }
     }
 }

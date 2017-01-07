@@ -44,8 +44,8 @@ namespace ScharlieAndSnow
             rectangleSnow = new Rectangle((int)GameInformation.Instance.mapInformation.PositionHUD[playerId].X, (int)GameInformation.Instance.mapInformation.PositionHUD[playerId].Y,
                                 snowballBackGround.Width, snowballBackGround.Height);
 
-            percentPlayerX = (int)Constant.ValueToPercent(GameInformation.Instance.mapInformation.PositionHUD[playerId].X, Constant.x);
-            percentPlayerY = (int)Constant.ValueToPercent(GameInformation.Instance.mapInformation.PositionHUD[playerId].Y, Constant.y);
+            percentPlayerX = (int)GameInformation.Instance.mapInformation.PositionHUD[playerId].X;
+            percentPlayerY = (int)GameInformation.Instance.mapInformation.PositionHUD[playerId].Y;
 
 
 
@@ -54,7 +54,7 @@ namespace ScharlieAndSnow
         public void Update(GameTime gameTime, float _currentTemperatur)
         {
             //pos = GUIStuff.Instance.camera.Bounds.Width;
-            rectanglePlayer = new Rectangle((int)GUIStuff.Instance.camera.position.X + (int)Constant.PercentFromValue(percentPlayerX, GUIStuff.Instance.camera.Bounds.Width), (int)GUIStuff.Instance.camera.position.Y + (int)Constant.PercentFromValue(percentPlayerY, GUIStuff.Instance.camera.Bounds.Height),
+            rectanglePlayer = new Rectangle(percentPlayerX,percentPlayerY,
                                 playerBackground.Width, playerBackground.Height);
             this.currentTemperatur = _currentTemperatur;
             //rectanglePlayer = new Rectangle()
