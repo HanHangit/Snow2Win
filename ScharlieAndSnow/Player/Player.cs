@@ -151,31 +151,35 @@ namespace ScharlieAndSnow
                     sprite.CurrentAnimation = AnimationKey.WalkRight;
                 }
                 //Collect Snow
-                if (pressedKeys[i] == PlayerManager.validKeys[_playerId][3])
+                if(currentAmountSnowball < 3)
                 {
-                    if (_currentDirection == Direction.Right)
+                    if (pressedKeys[i] == PlayerManager.validKeys[_playerId][3])
                     {
-                        if (MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X + textureWidth, _pos.Y + textureHeight + 8), 4))
+                        if (_currentDirection == Direction.Right)
                         {
-                            _points++;
+                            if (MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X + textureWidth, _pos.Y + textureHeight + 8), 4))
+                            {
+                                _points++;
+                            }
                         }
-                    }
-                    else
-                    {
-                        if (MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X, _pos.Y + textureHeight + 8), 4))
+                        else
                         {
-                            _points++;
+                            if (MapStuff.Instance.map.CollectSnow(new Vector2(_pos.X, _pos.Y + textureHeight + 8), 4))
+                            {
+                                _points++;
+                            }
                         }
-                    }
 
-                    if (_points > particleForSnowball)
-                    {
-                        currentAmountSnowball++;
-                        _points -= particleForSnowball;
- 
-                    }
+                        if (_points > particleForSnowball)
+                        {
+                            currentAmountSnowball++;
+                            _points -= particleForSnowball;
 
+                        }
+
+                    }
                 }
+                
 
                 //Throw Snowball
                 if (pressedKeys[i] == PlayerManager.validKeys[_playerId][4])
