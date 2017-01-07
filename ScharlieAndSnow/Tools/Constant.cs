@@ -24,9 +24,23 @@ namespace ScharlieAndSnow
             float helpy = y / 100 * yValue;
             return new Vector2(helpx, helpy);
         }
-        public static float PercentFromValue(float Value, float maxValue)
+        /// <summary>
+        /// Berechnet ProzentSatz zwischen Wert und Maximum
+        /// </summary>
+        /// <param></param>
+        /// <returns></returns>
+        public static float ValueToPercent(float value, float maxValue)
         {
-            return (maxValue / 100) * Value;
+            return (value / maxValue) * 100;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param></param>
+        /// <returns></returns>
+        public static float PercentFromValue(float percent, float maxValue)
+        {
+            return (maxValue / 100) * percent;
         }
 
         /// <summary>
