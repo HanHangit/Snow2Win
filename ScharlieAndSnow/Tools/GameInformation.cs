@@ -12,6 +12,7 @@ namespace ScharlieAndSnow
         public float speed = 3;
         public float jumpSpeed = 7f;
         public float maxHealth = 100;
+        public int maxAmountSnowball = 3;
         public int particleForSnowball = 10;
         public Vector2 snowballMove = new Vector2(15, 0);
         public float attackSpeed = 0.3f; //Seconds
@@ -25,7 +26,7 @@ namespace ScharlieAndSnow
         public Vector2 gravity = new Vector2(0, 0.16f);
         public float drag = 0.001f;
         //ToDo Berechnen der Positionen der HUD abhängig der Spieleranzahl!
-        public Vector2[] PositionHUD = {new Vector2(100,420), new Vector2( 1000, 420)};
+        public Vector2[] PositionHUD = {new Vector2(100,500), new Vector2( 1000, 500)};
     }
 
     class CameraInformation
