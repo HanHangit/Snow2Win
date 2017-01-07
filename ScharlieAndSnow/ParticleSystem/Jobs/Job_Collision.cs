@@ -51,11 +51,6 @@ namespace ScharlieAndSnow
             p.alive = false;
             p.radius = 1;
 
-            while (MapStuff.Instance.map.Walkable(new Vector2(p.position.X, p.position.Y + 1)))
-                p.position.Y += 1;
-
-
-
             MapStuff.Instance.map.AddSnow(p);        
 
         }

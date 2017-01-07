@@ -46,6 +46,7 @@ namespace ScharlieAndSnow
         AnimatedSprite sprite;
         int  textureWidth, textureHeight;
         PlayerHUD playerHUD;
+        int offsetX = 0, offsetY = 5;
 
 
 
@@ -134,17 +135,6 @@ namespace ScharlieAndSnow
                     _pos.Y -= 1;
                     _currentState = State.jumping;
                 }
-
-                //Move UP
-                if ((pressedKeys[i] == PlayerManager.validKeys[_playerId][0] && _currentState == State.grounded) || _currentState == State.Start)
-                {
-                    _mov.Y = -4;
-                    //Ist ganz praktisch, den Charakter einen Pixel nach oben zu bewegen, damit er auf jedenfall springen darf.
-                    _pos.Y -= 1;
-                    _currentState = State.jumping;
-                    sprite.CurrentAnimation = AnimationKey.JumpRight;
-                }
-
                 //Move Left
                 if (pressedKeys[i] == PlayerManager.validKeys[_playerId][1])
                 {
@@ -245,15 +235,15 @@ namespace ScharlieAndSnow
         {
             //Collision der linken obere Ecke sowie der rechten obere Ecke
             //Collision Check X-Achse
-            if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X + textureWidth, _pos.Y + textureHeight - 17))
-            && MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X, _pos.Y + textureHeight - 17)))
+            if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X, _pos.Y + sprite.Height - 17))
+            && MapStuff.Instance.map.Walkable(new Vector2(_pos.X + _mov.X + sprite.Width, _pos.Y + sprite.Height - 17)))
             {
                 _pos.X += _mov.X;
 
             }
             //Collision Check Y-Achse
-            if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + _mov.Y + textureHeight))
-                && MapStuff.Instance.map.Walkable(new Vector2(_pos.X + textureWidth, _pos.Y + _mov.Y + textureHeight)))
+            if (MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + _mov.Y + sprite.Height - offsetY))
+                && MapStuff.Instance.map.Walkable(new Vector2(_pos.X + sprite.Width, _pos.Y + _mov.Y + sprite.Height - offsetY)))
             {
 
                 _pos.Y += _mov.Y;
@@ -266,11 +256,19 @@ namespace ScharlieAndSnow
                 _currentState = State.grounded;
                 _mov.Y = 0;
             }
-            while (!MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + textureHeight))
-            || !MapStuff.Instance.map.Walkable(new Vector2(_pos.X + textureWidth, _pos.Y + textureHeight)))
+
+            while (!MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + sprite.Height - offsetY))
+            || !MapStuff.Instance.map.Walkable(new Vector2(_pos.X + sprite.Width, _pos.Y + sprite.Height - offsetY)))
                 _pos.Y = _pos.Y - 1;
 
-            if(_mov != Vector2.Zero)
+            if(_currentState == State.grounded)
+            {
+                while (MapStuff.Instance.map.Walkable(new Vector2(_pos.X, _pos.Y + sprite.Height - offsetY))
+                        && MapStuff.Instance.map.Walkable(new Vector2(_pos.X + sprite.Width, _pos.Y + sprite.Height - offsetY)))
+                    _pos.Y = _pos.Y + 1;
+            }
+
+            if (_mov != Vector2.Zero)
             {
                 sprite.IsAnimating = true;
 

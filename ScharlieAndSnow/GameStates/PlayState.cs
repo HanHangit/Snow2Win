@@ -22,21 +22,16 @@ namespace ScharlieAndSnow
 
             MapStuff.Instance.partCollHandler.Draw(spriteBatch);
 
- 
-
-           
-
-            //spriteBatch.End();
 
             RenderTarget2D rendTarget2D = MapStuff.Instance.map.rendTarget;
-
-            //spriteBatch.Begin(transformMatrix: GUIStuff.Instance.camera.GetViewMatrix(gameTime));
 
             spriteBatch.Draw(rendTarget2D, Vector2.Zero, Color.White);
 
             //Draw Player
             for (int i = 0; i < PlayerManager.Instance.playerArray.Length; i++)
                 PlayerManager.Instance.playerArray[i].Draw(spriteBatch);
+
+
         }
 
         public void DrawGUI(SpriteBatch spriteBatch)

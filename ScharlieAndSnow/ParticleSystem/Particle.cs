@@ -217,26 +217,37 @@ namespace ScharlieAndSnow
 
         public static void SplitUpParticle(Particle p)
         {
-            p.alive = false;
-            Vector2 lastPartPos = p.position + p.force;
-
-            while (MapStuff.Instance.map.Walkable(lastPartPos))
-                lastPartPos += p.force;
-
             Vector2 move = p.force;
+            Vector2 position = p.position;
+
+            int k = 10;
+            while (!MapStuff.Instance.map.Walkable(position - p.force))
+            {
+                position -= p.force;
+
+                k--;
+                if (k < 0)
+                    return;
+            }
+
+            k = 10;
+            while (MapStuff.Instance.map.Walkable(position))
+            {
+                position += p.force;
+
+                k--;
+                if (k < 0)
+                    return;
+            }
 
             Vector2 reflect = Vector2.Zero;
 
-            while (reflect.X == 0 && reflect.Y == 0)
-            {
-                lastPartPos.X -= p.force.X;
-                if (!MapStuff.Instance.map.Walkable(lastPartPos))
-                    reflect.X = -1 * Math.Sign(p.force.X);
+            if (MapStuff.Instance.map.Walkable(position - new Vector2(p.force.X, 0)))
+                reflect.X = -1 * Math.Sign(p.force.X);
 
-                lastPartPos.Y -= p.force.Y;
-                if (!MapStuff.Instance.map.Walkable(lastPartPos))
-                    reflect.Y = -1 * Math.Sign(p.force.Y);
-            }
+            if (MapStuff.Instance.map.Walkable(position - new Vector2(0, p.force.Y)))
+                reflect.Y = -1 * Math.Sign(p.force.Y);
+
 
             int numberOfSnow = (int)p.mass;
 
@@ -245,25 +256,20 @@ namespace ScharlieAndSnow
 
             p.mass = 1;
 
+            
+
+
+
             for (int i = 0; i < numberOfSnow; ++i)
             {
-                move = Vector2.Reflect(move, Vector2.Normalize(reflect));
-                //move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-10, 10)));
-
-                Rectangle particleRect = new Rectangle(p.position.ToPoint(), new Point(2, 2));
-
-                move = Vector2.Normalize(move);
+                move = Vector2.Reflect(p.force, reflect);
+                if (move.Y > 0)
+                    move.Y *= -1;
+                move.Normalize();
                 move *= MapStuff.Instance.rnd.Next(100, 300) / 100f;
+                move = MyRectangle.rotate(move, MathHelper.ToRadians(MapStuff.Instance.rnd.Next(-30, 30)));
 
-                /*
-                while (particleRect.Intersects(collisionObject))
-                {
-                    p.position += move;
-                    particleRect = new Rectangle(p.position.ToPoint(), new Point(2, 2));
-                }
-                */
-
-                MapStuff.Instance.partCollHandler.AddParticle(lastPartPos + 10 * move, 1, 6, move, false, false);
+                MapStuff.Instance.partCollHandler.AddParticle(p.position + move, 1, 6, move, false, false);
             }
         }
 

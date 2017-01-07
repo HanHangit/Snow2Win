@@ -289,19 +289,19 @@ namespace ScharlieAndSnow
 
             if (CheckSnow(position + new Vector2(0, -1)))
             {
-                AddSnow(GetSnowParticle(position + new Vector2(0, -1)), position);
+                AddSnowToMap(GetSnowParticle(position + new Vector2(0, -1)), position);
                 CollectSnow(position + new Vector2(0, -1));
             }
             else
             {
                 if (CheckSnow(position + new Vector2(-1, -1)))
                 {
-                    AddSnow(GetSnowParticle(position - new Vector2(1, 1)), position);
+                    AddSnowToMap(GetSnowParticle(position - new Vector2(1, 1)), position);
                     CollectSnow(position + new Vector2(-1, -1));
                 }
                 if (CheckSnow(position + new Vector2(1, -1)))
                 {
-                    AddSnow(GetSnowParticle(position + new Vector2(1, -1)), position);
+                    AddSnowToMap(GetSnowParticle(position + new Vector2(1, -1)), position);
                     CollectSnow(position + new Vector2(1, -1));
                 }
             }
@@ -329,6 +329,15 @@ namespace ScharlieAndSnow
         }
         public void AddParticle(Particle p )
         {
+
+            while (MapStuff.Instance.map.Walkable(new Vector2(p.position.X, p.position.Y + 1))
+                && CheckPosition(p.position))
+                p.position.Y += 1;
+
+            while (!MapStuff.Instance.map.Walkable(new Vector2(p.position.X, p.position.Y))
+                && CheckPosition(p.position))
+                p.position.Y -= 1;
+
             p.radius = 4;
             particles.Add(p);
         }
@@ -362,14 +371,9 @@ namespace ScharlieAndSnow
             if (!CheckPosition(p))
                 return;
 
-
             Particle.SplitUpParticle(p);
 
             AddParticle(p);
-
-            int numberOfSnow = (int)p.mass;
-
-            Point offsetPoint = new Point(10, 10);
         }
 
 
