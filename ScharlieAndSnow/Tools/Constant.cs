@@ -13,6 +13,13 @@ namespace ScharlieAndSnow
             get; set; }
         public static int x = 1270;
         public static int y = 720;
+
+        static Rectangle screenRectangle = new Rectangle(0, 0, x, y);
+
+        public static Rectangle ScreenRectangle
+        {
+            get { return screenRectangle; }
+        }
         /// <summary>
         /// Gibt die prozentuale Position von dem Windows zurück
         /// </summary>

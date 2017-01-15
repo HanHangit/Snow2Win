@@ -15,6 +15,7 @@ namespace ScharlieAndSnow
         Mainmenu,
         PlayState,
         CreateGame,
+        TitleIntroState,
     }
 
     interface IGameState

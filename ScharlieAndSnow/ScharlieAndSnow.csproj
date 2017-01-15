@@ -76,6 +76,7 @@
     <Compile Include="GameStates\IGameStates.cs" />
     <Compile Include="GameStates\MainMenu.cs" />
     <Compile Include="GameStates\PlayState.cs" />
+    <Compile Include="GameStates\TitleIntroState.cs" />
     <Compile Include="Map\CloudSpawner.cs" />
     <Compile Include="Map\PowerUpSpawner.cs" />
     <Compile Include="ParticleSystem\PlayerModifikator.cs" />

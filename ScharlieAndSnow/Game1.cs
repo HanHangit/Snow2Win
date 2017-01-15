@@ -15,7 +15,7 @@ namespace ScharlieAndSnow
         SpriteBatch spriteBatch;
         RasterizerState rasterizerState;
         IGameState state;
-        EGameState prev = EGameState.None, curr = EGameState.Mainmenu;
+        EGameState prev = EGameState.None, curr = EGameState.TitleIntroState;
         Dictionary<AnimationKey, Animation> playerAnimation = new Dictionary<AnimationKey, Animation>();
 
         public Dictionary<AnimationKey, Animation> PlayerAnimations
@@ -41,7 +41,7 @@ namespace ScharlieAndSnow
         {
             // TODO: Add your initialization logic here
             this.IsMouseVisible = true;
-            
+            state = new TitleIntroState();
             GraphicStuff.Instance.graphicDevice = GraphicsDevice;
 
             graphics.PreferredBackBufferWidth = Constant.x;
